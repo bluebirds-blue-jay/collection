@@ -1,0 +1,24 @@
+{
+  "name": "@bluejay/collection",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require ./node_modules/ts-node/register --require ./test/setup.js ./test/**/*.test.ts"
+  },
+  "author": "Sylvain Estevez",
+  "license": "MIT",
+  "dependencies": {
+    "@bluejay/utils": "^2.0.0",
+    "@types/lodash": "^4.14.77",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
+    "typedoc": "^0.9.0"
+  }
+}
