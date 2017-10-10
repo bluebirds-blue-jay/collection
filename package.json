@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require ./node_modules/ts-node/register --require ./test/setup.js ./test/**/*.test.ts"
+    "test": "mocha --require ./node_modules/ts-node/register --require ./test/setup.js ./test/**/*.test.ts",
+    "docs": "./node_modules/.bin/typedoc --out docs --mode file --excludePrivate ./index.ts"
   },
   "author": "Sylvain Estevez",
   "license": "MIT",
