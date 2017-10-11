@@ -3,8 +3,14 @@ import * as Lodash from 'lodash';
 
 export class Collection<T> extends Array implements ICollection<T> {
   public constructor(objects: T[] = []) {
-    super();
-    if (Array.isArray(objects)) { // Required because of some weird JS behavior
+    const isArray = Array.isArray(objects);
+
+    // The engine will call this constructor with a length parameter when you do a .map() for example, so we need to
+    // handle the case where the constructor is not called with an array of objects.
+    super(isArray ? 0 : arguments[0]);
+
+    // Push elements into the array, this will set the property length and populate it.
+    if (isArray) {
       this.push(...objects);
     }
   }

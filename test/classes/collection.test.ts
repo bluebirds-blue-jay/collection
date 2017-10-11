@@ -10,6 +10,9 @@ describe('Collection', function () {
     it('should build a collection from an array', () => {
       expect(new Collection([1, 2, 3])).to.deep.equal([1, 2, 3]);
     });
+    it('should build an array with a length', () => {
+      expect(new Collection(3 as any)).to.have.lengthOf(3);
+    });
   });
   describe('#forEachSeries()', function () {
     it('should process elements in series', async () => {
