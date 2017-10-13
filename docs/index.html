@@ -65,7 +65,7 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="collection">Collection</h1>
-				<p>Async ready array like class. Provides additional methods on top of native arrays in order to ease asynchronous work.</p>
+				<p>Async ready array like class. Offers most array methods, plus a bunch of async iterations and some common Lodash methods out of the box.</p>
 				<h2 id="requirements">Requirements</h2>
 				<ul>
 					<li><code>node &gt;= 7.10</code></li>
@@ -80,10 +80,7 @@
 
 collection.size(); <span class="hljs-comment">// 3</span>
 collection.getAt(<span class="hljs-number">1</span>); <span class="hljs-comment">// { foo: 2 }</span>
-collection[<span class="hljs-number">1</span>]; <span class="hljs-comment">// { foo: 2 }</span>
-
 collection.setAt(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>);
-collection[<span class="hljs-number">1</span>] = <span class="hljs-number">2</span>;
 
 <span class="hljs-comment">// Regular array methods </span>
 collection.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(el.foo)); <span class="hljs-comment">// 1, 2, 3</span>
@@ -95,7 +92,12 @@ collection.map(<span class="hljs-function"><span class="hljs-params">el</span> =
 
 <span class="hljs-comment">// Lodash methods</span>
 collection.findByProperties({ foo: <span class="hljs-number">1</span> }); <span class="hljs-comment">// { foo: 1 }</span>
-collection.pluck(<span class="hljs-string">'foo'</span>); <span class="hljs-comment">// [1, 2, 3]</span>
+collection.mapByProperty(<span class="hljs-string">'foo'</span>); <span class="hljs-comment">// [1, 2, 3]</span>
+
+<span class="hljs-comment">// Iterate</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> object of collection) {
+  <span class="hljs-comment">// Do something</span>
+}
 </code></pre>
 				<h2 id="documentation">Documentation</h2>
 				<p>See <a href="https://bluebirds-blue-jay.github.io/collection/">Github Pages</a>.</p>

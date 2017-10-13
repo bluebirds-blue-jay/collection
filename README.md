@@ -1,6 +1,6 @@
 # Collection
 
-Async ready array like class. Provides additional methods on top of native arrays in order to ease asynchronous work.
+Async ready array like class. Offers most array methods, plus a bunch of async iterations and some common Lodash methods out of the box.
 
 ## Requirements
 
@@ -20,10 +20,7 @@ const collection = new Collection([{ foo: 1 }, { foo: 2 }, { foo: 3 }]); // Init
 
 collection.size(); // 3
 collection.getAt(1); // { foo: 2 }
-collection[1]; // { foo: 2 }
-
 collection.setAt(1, 5);
-collection[1] = 2;
 
 // Regular array methods 
 collection.forEach(el => console.log(el.foo)); // 1, 2, 3
@@ -35,7 +32,12 @@ await collection.mapParallel(async el => el.foo * 2); // [2, 4, 6]
 
 // Lodash methods
 collection.findByProperties({ foo: 1 }); // { foo: 1 }
-collection.pluck('foo'); // [1, 2, 3]
+collection.mapByProperty('foo'); // [1, 2, 3]
+
+// Iterate
+for (const object of collection) {
+  // Do something
+}
 ```
 
 ## Documentation
