@@ -22,6 +22,10 @@ collection.size(); // 3
 collection.getAt(1); // { foo: 2 }
 collection.setAt(1, 5);
 
+// Array style elements access
+collection[1] = { foo: 18 };
+collection[1]; // { foo: 18 }
+
 // Regular array methods 
 collection.forEach(el => console.log(el.foo)); // 1, 2, 3
 collection.map(el => console.log(el.foo)); // 1, 2, 3

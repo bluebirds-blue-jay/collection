@@ -1,4 +1,5 @@
 export interface ICollection<T> {
+  [index: number]: T;
   compact(): T[];
   every(callback: (object: T, index?: number) => boolean): boolean;
   filter(callback: (object: T, index?: number) => boolean): T[];

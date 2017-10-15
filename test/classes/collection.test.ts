@@ -376,4 +376,16 @@ describe('Collection', function () {
       expect(coll.getObjects()).to.equal(objects);
     });
   });
+
+  describe('[] accessibility', function () {
+    it('should set an object using [index]', () => {
+      const coll = new Collection([1, 2, 3]);
+      coll[1] = 10;
+      expect(coll.getAt(1)).to.equal(10);
+    });
+    it('should get an object using [index]', () => {
+      const coll = new Collection([1, 2, 3]);
+      expect(coll[1]).to.equal(2);
+    });
+  });
 });

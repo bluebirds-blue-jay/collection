@@ -2,10 +2,39 @@ import { ICollection } from '../interfaces/collection';
 import * as Lodash from 'lodash';
 
 export class Collection<T> implements ICollection<T> {
+  [index: number]: T; // Objects are accessible through collection[index]
+
   private objects: T[];
 
   public constructor(objects: T[] = []) {
     this.objects = objects;
+
+    return new Proxy(this, {
+      get(target: Collection<T>, name: string) {
+        // If the property is an index, then return the object at this index.
+        if (!Lodash.isSymbol(name)) {
+          const int = parseInt(name, 10);
+          if (Lodash.isInteger(int)) {
+            return target.getAt(int);
+          }
+        }
+
+        // Otherwise return the requested property.
+        return target[name];
+      },
+
+      set(target: Collection<T>, name: string, value: any) {
+        if (!Lodash.isSymbol(name)) {
+          const int = parseInt(name, 10);
+          if (Lodash.isInteger(int)) {
+            target.setAt(int, value as T);
+            return true;
+          }
+        }
+
+        return (target[name] = value);
+      }
+    });
   }
 
   public compact(): T[] {
