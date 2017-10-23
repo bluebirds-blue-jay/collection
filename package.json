@@ -6,22 +6,26 @@
   "scripts": {
     "test": "mocha --require ./node_modules/ts-node/register --require ./test/setup.js ./test/**/*.test.ts",
     "docs": "./node_modules/.bin/typedoc --out docs --mode file --excludePrivate ./index.ts",
-    "cov": "./node_modules/.bin/nyc --reporter lcov npm run test"
+    "cov": "./node_modules/.bin/nyc --reporter lcov npm run test",
+    "prepare": "rm -rf dts && tsc && tsc --outDir dts -d"
   },
   "author": "Sylvain Estevez",
+  "typings": "dts/index.d.ts",
   "license": "MIT",
   "dependencies": {
-    "@bluejay/utils": "^2.0.0",
-    "@types/lodash": "^4.14.77",
+    "@bluejay/utils": "^3.0.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
+    "@types/lodash": "^4.14.78",
     "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.46",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
     "nyc": "^11.2.1",
     "ts-node": "^3.3.0",
-    "typedoc": "^0.9.0"
+    "typedoc": "^0.9.0",
+    "typescript": "^2.5.3"
   }
 }

@@ -50,7 +50,7 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public filterByProperties(properties: Partial<T>): T[] {
-    return Lodash.filter(this.objects, properties);
+    return Lodash.filter(this.objects, properties as any);
   }
 
   public find(callback: (object: T, index?: number) => boolean): T {
@@ -58,7 +58,7 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public findByProperties(properties: Partial<T>): T {
-    return Lodash.find(this.objects, properties);
+    return Lodash.find(this.objects, properties as any);
   }
 
   public forEach(callback: (object: T, index?: number) => void): void {

@@ -82,6 +82,10 @@ collection.size(); <span class="hljs-comment">// 3</span>
 collection.getAt(<span class="hljs-number">1</span>); <span class="hljs-comment">// { foo: 2 }</span>
 collection.setAt(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>);
 
+<span class="hljs-comment">// Array style elements access</span>
+collection[<span class="hljs-number">1</span>] = { foo: <span class="hljs-number">18</span> };
+collection[<span class="hljs-number">1</span>]; <span class="hljs-comment">// { foo: 18 }</span>
+
 <span class="hljs-comment">// Regular array methods </span>
 collection.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(el.foo)); <span class="hljs-comment">// 1, 2, 3</span>
 collection.map(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(el.foo)); <span class="hljs-comment">// 1, 2, 3</span>
