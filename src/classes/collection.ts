@@ -70,6 +70,10 @@ export class Collection<T> implements ICollection<T> {
     return options.unique ? Lodash.uniq(results) : results;
   }
 
+  public keyByProperty<P extends keyof T>(property: P): { [p: string]: T; } {
+    return Lodash.keyBy(this.objects, property);
+  }
+
   public includes(object: T, startAt?: number): boolean {
     return this.objects.includes(object, startAt);
   }

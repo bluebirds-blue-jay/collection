@@ -8,6 +8,7 @@ export interface ICollection<T> {
   findByProperties(properties: Partial<T>): T;
   forEach(callback: (object: T, index?: number) => void): void;
   mapByProperty<P extends keyof T>(property: P): (T[P])[];
+  keyByProperty<P extends keyof T>(property: P): { [p: string]: T; };
   includes(object: T, startAt?: number): boolean;
   indexOf(object: T, startAt?: number): number;
   some(callback: (object: T, index?: number) => boolean): boolean;
