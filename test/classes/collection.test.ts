@@ -163,6 +163,18 @@ describe('Collection', function () {
     });
   });
 
+  describe('#pick()', function () {
+    it('should pick keys from an array', () => {
+      expect(new Collection([{ a: 1, b: 1 }, { a: 2, b: 2 }]).pick(['a'])).to.deep.equal([{ a: 1 }, { a: 2 }]);
+    });
+  });
+
+  describe('#omit()', function () {
+    it('should omit keys from an array', () => {
+      expect(new Collection([{ a: 1, b: 1 }, { a: 2, b: 2 }]).omit(['a'])).to.deep.equal([{ b: 1 }, { b: 2 }]);
+    });
+  });
+
   describe('#every()', function () {
     it('should return true', () => {
       const coll = new Collection([1, 2, 3, 4]);

@@ -1,5 +1,6 @@
 import { ICollection } from '../interfaces/collection';
 import * as Lodash from 'lodash';
+import { omit, Omit, pick } from '@bluejay/utils';
 
 export class Collection<T> implements ICollection<T> {
   [index: number]: T; // Objects are accessible through collection[index]
@@ -39,6 +40,14 @@ export class Collection<T> implements ICollection<T> {
 
   public compact(): T[] {
     return Lodash.compact(this.objects);
+  }
+
+  public pick<K extends keyof T>(key: K | K[]): Pick<T, K>[] {
+    return this.map(item => pick(item, key));
+  }
+
+  public omit<K extends keyof T>(key: K | K[]): Omit<T, K>[] {
+    return this.map(item => omit(item, key));
   }
 
   public every(callback: (object: T, index?: number) => boolean): boolean {
