@@ -100,6 +100,15 @@ describe('Collection', function () {
     });
   });
 
+  describe('#groupByProperty()', function () {
+    it('should group values', () => {
+      const coll = new Collection([{ a: '1' }, { a: '2' }, { a: '2' }]);
+      const values = coll.groupByProperty('a');
+      const expected = { '1': [{ a: '1' }], '2': [{ a: '2' }, { a: '2' }] };
+      expect(values).to.eql(expected);
+    });
+  });
+
   describe('#assignEach()', function () {
     it('should assign to all objects', () => {
       const coll = new Collection<{ a: number, b?: boolean }>([{ a: 1 }, { a: 2 }]);
