@@ -101,7 +101,7 @@ describe('Collection', function () {
   });
 
   describe('#groupByProperty()', function () {
-    it('should key values', () => {
+    it('should group values', () => {
       const coll = new Collection([{ a: '1' }, { a: '2' }, { a: '2' }]);
       const values = coll.groupByProperty('a');
       const expected = { '1': [{ a: '1' }], '2': [{ a: '2' }, { a: '2' }] };
