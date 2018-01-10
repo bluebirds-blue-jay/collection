@@ -83,6 +83,10 @@ export class Collection<T> implements ICollection<T> {
     return Lodash.keyBy(this.objects, property);
   }
 
+  public groupByProperty<P extends keyof T>(property: P): { [p: string]: T[]; } {
+    return Lodash.groupBy(this.objects, property);
+  }
+
   public includes(object: T, startAt?: number): boolean {
     return this.objects.includes(object, startAt);
   }
