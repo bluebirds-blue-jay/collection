@@ -1,6 +1,10 @@
+import { Omit } from '@bluejay/utils';
+
 export interface ICollection<T> {
   [index: number]: T;
   compact(): T[];
+  pick<K extends keyof T>(key: K | K[]): Pick<T, K>[];
+  omit<K extends keyof T>(key: K | K[]): Omit<T, K>[];
   every(callback: (object: T, index?: number) => boolean): boolean;
   filter(callback: (object: T, index?: number) => boolean): T[];
   filterByProperties(properties: Partial<T>): T[];
