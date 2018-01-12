@@ -4,8 +4,9 @@ import { omit, Omit, pick } from '@bluejay/utils';
 
 export class Collection<T> implements ICollection<T> {
   [index: number]: T; // Objects are accessible through collection[index]
-
   private objects: T[];
+
+  public get length() { return this.size(); }
 
   public constructor(objects: T[] = []) {
     this.objects = objects;
@@ -38,6 +39,55 @@ export class Collection<T> implements ICollection<T> {
     });
   }
 
+  public concat(...values: T[][]): T[] {
+    // FIXME
+    return this.getObjects();
+  }
+
+  public join(char: string): string {
+    // FIXME
+    return '';
+  }
+
+  public splice(start: number, deleteCount?: number): T[];
+  public splice(start: number, deleteCount: number, ...replacements: T[]): T[] {
+    this.objects.splice(start, deleteCount, ...replacements);
+    // FIXME
+    return this.objects;
+  }
+
+  public entries() {
+    return this.objects.entries();
+  }
+
+  public keys() {
+    return this.objects.keys();
+  }
+
+  public values() {
+    return this.objects.values();
+  }
+
+  public copyWithin(target: number, start?: number, end?: number): this {
+    this.objects.copyWithin(target, start, end);
+    return this;
+  }
+
+  public findIndex(callback: (this: void, object: T, index: number, collection: T[]) => boolean): number {
+    return this.objects.findIndex(callback);
+  }
+
+  public fill(object: T, start?: number, end?: number): this {
+    this.objects.fill(object, start, end);
+    return this;
+  }
+
+  public sort(comparator?: (a: T, b: T) => number): this {
+    this.objects.sort(comparator);
+    return this;
+  }
+
+
   public compact(): T[] {
     return Lodash.compact(this.objects);
   }
@@ -50,28 +100,28 @@ export class Collection<T> implements ICollection<T> {
     return this.map(item => omit(item, key));
   }
 
-  public every(callback: (object: T, index?: number) => boolean): boolean {
-    return this.objects.every(callback);
+  public every(callback: (object: T, index: number, collection: T[]) => boolean, thisArg: any = this): boolean {
+    return this.objects.every(callback.bind(thisArg));
   }
 
-  public filter(callback: (object: T, index?: number) => boolean): T[] {
-    return this.objects.filter(callback);
+  public filter<S extends T>(callback: (object: T, index: number, collection: T[]) => object is S, thisArg = this): T[] {
+    return this.objects.filter(callback.bind(thisArg));
   }
 
   public filterByProperties(properties: Partial<T>): T[] {
     return Lodash.filter(this.objects, properties as any);
   }
 
-  public find(callback: (object: T, index?: number) => boolean): T {
-    return this.objects.find(callback);
+  public find(callback: (object: T, index: number, collection: T[]) => boolean, thisArg = this): T {
+    return this.objects.find(callback.bind(thisArg));
   }
 
   public findByProperties(properties: Partial<T>): T {
     return Lodash.find(this.objects, properties as any);
   }
 
-  public forEach(callback: (object: T, index?: number) => void): void {
-    this.objects.forEach(callback);
+  public forEach(callback: (object: T, index: number, collection: T[]) => void, thisArg = this): void {
+    this.objects.forEach(callback.bind(thisArg));
   }
 
   public mapByProperty<P extends keyof T>(property: P, options: { unique?: boolean } = {}): T[P][] {
@@ -95,12 +145,12 @@ export class Collection<T> implements ICollection<T> {
     return this.objects.indexOf(object, startAt);
   }
 
-  public some(callback: (object: T, index?: number) => boolean): boolean {
-    return this.objects.some(callback);
+  public some(callback: (object: T, index: number, collection: T[]) => boolean, thisArg = this): boolean {
+    return this.objects.some(callback.bind(thisArg));
   }
 
-  public map<R>(callback: (object: T, index?: number) => R): R[] {
-    return this.objects.map(callback);
+  public map<R>(callback: (object: T, index: number, collection: T[]) => R, thisArg = this): R[] {
+    return this.objects.map(callback.bind(thisArg));
   }
 
   public lastIndexOf(object: T, startAt: number = this.lastIndex()): number {
@@ -116,12 +166,12 @@ export class Collection<T> implements ICollection<T> {
     return this;
   }
 
-  public reduce<R>(callback: (acc: R, object: T, index?: number) => R, initial: R): R {
-    return this.objects.reduce(callback, initial);
+  public reduce<R>(callback: (acc: R, object: T, index: number, collection: T[]) => R, initial: R, thisArg = this): R {
+    return this.objects.reduce(callback.bind(thisArg), initial);
   }
 
-  public reduceRight<R>(callback: (acc: R, object: T, index?: number) => R, initial: R): R {
-    return this.objects.reduceRight(callback, initial);
+  public reduceRight<R>(callback: (acc: R, object: T, index: number, collection: T[]) => R, initial: R, thisArg = this): R {
+    return this.objects.reduceRight(callback.bind(this), initial);
   }
 
   public assignEach(properties: Partial<T>): this {
@@ -154,33 +204,37 @@ export class Collection<T> implements ICollection<T> {
     return Lodash.uniq(this.objects);
   }
 
-  public push(...objects: T[]): this {
+  public push(...objects: T[]): number {
     this.objects.push(...objects);
-    return this;
+    return this.size();
   }
 
   public pop(): T {
     return this.objects.pop();
   }
 
-  public reverse(): this {
+  public reverse(): T[] {
     this.objects.reverse();
-    return this;
+    return this.toArray();
   }
 
   public shift(): T {
     return this.objects.shift();
   }
 
-  public unshift(...objects: T[]): this {
+  public unshift(...objects: T[]): number {
     this.objects.unshift(...objects);
-    return this;
+    return this.size();
   }
 
   public *[Symbol.iterator](): IterableIterator<T> {
     for (const object of this.objects) {
       yield object;
     }
+  }
+
+  public [Symbol.unscopables](): { copyWithin: boolean, entries: boolean, keys: boolean, fill: boolean, find: boolean, findIndex: boolean, values: boolean } {
+    return this.objects[Symbol.unscopables]();
   }
 
   public size(): number {
