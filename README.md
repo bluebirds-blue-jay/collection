@@ -15,7 +15,7 @@ Async ready, chainable, highly convenient array compatible class. Supports all a
 
 ### Array compatibility VS inheritance
 
-Collections are fully compatible with the [ES6 array specification](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array). However, a `Collection` **does not** inherit from `Array`. Instead, it keeps track of an internal array and *forwards* method calls to it.
+Collections are fully compatible with the [ES6 array specification](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array). However, a `Collection` **does not** inherit from / **is not** an `Array`. Instead, it **implements** the `Array` interface. Internally through, it keeps track of an actual array and *forwards* method calls to it.
 
 In practice:
 
@@ -33,7 +33,7 @@ foo(collection); // Compiles too!
 ```
 
 
-If you wish to check if an object is a collection, use:
+If you wish to check if an object is a collection, use `Collection.isCollection()`:
 
 ```typescript
 const collection = new Collection([1, 2, 3]);
@@ -41,7 +41,7 @@ const collection = new Collection([1, 2, 3]);
 Collection.isCollection(collection); // true
 ```
 
-If, for example, you have a loosely typed argument and wish to know if a value supports array methods, use:
+If you wish to check if an object is either a `Collection` or an `Array`, use `Collection.isArrayCompatible()`:
 
 ```typescript
 const values = [1, 2, 3]; 
@@ -58,7 +58,7 @@ function foo(bar: any) {
 }
 ```
 
-Additionally, you can still use `Array.from()` since a collection is *iterable*:
+Additionally, you can still use `Array.from()` since a `Collection` is *iterable*:
 
 ```typescript
 const collection = new Collection([1, 2, 3]);
@@ -66,7 +66,11 @@ const collection = new Collection([1, 2, 3]);
 Array.from(collection); // [1, 2, 3]
 ```
 
-### Basic usage
+### Available methods
+
+- All array methods are supported
+- Some `Lodash` methods such as `omit()` or `pick()` are built-in as instance methods
+- A few async methods allow you to perform async operations directly from the collection itself
 
 ```typescript
 import { Collection } from '@bluejay/collection';
@@ -131,7 +135,7 @@ filtered.toArray(); // [2, 3]
 filtered.isPersistent(); // Compilation error! `isPersistent()` does not exist on type `Collection`
 ```
 
-This is because this library has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which the library calls each item it needs to create a new Collection. 
+This is because this Bluejay has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which Bluejay calls each time it needs to create a new Collection. 
 
 ```typescript
 class MyCollection<T> extends Collection<T> {
@@ -165,7 +169,7 @@ instance.forEach((value, index, currentObj: MyCollection<number>) => { // Note t
 ```
 
 
-**Note:** While we made sure to provide a way for you to override the instances created by the library, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don't explicitly need to.  
+**Note:** While we made sure to provide a way for you to override the instances created by Bluejay, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don't explicitly need to.  
 
 ## API Documentation
 
