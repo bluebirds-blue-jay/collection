@@ -19,7 +19,7 @@ export interface ICollection<T> extends Array<T> {
   compact(): this;
   find(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): T;
   pick<K extends keyof T>(key: K | K[]): ICollection<Pick<T, K>>;
-  omit<K extends keyof T>(key: K | K[]): Omit<T, K>[];
+  omit<K extends keyof T>(key: K | K[]): ICollection<Omit<T, K>>;
   every(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): boolean;
   filter(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): ICollection<T>;
   filterByProperties(properties: Partial<T>): ICollection<T>;
