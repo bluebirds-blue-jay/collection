@@ -410,6 +410,13 @@ describe('Collection', function () {
       coll.setObjects(objects);
       expect(coll.getObjects()).to.equal(objects);
     });
+    it('should store an array from a collection', () => {
+      const original = new Collection([1, 2, 3]);
+      const overridden = new Collection();
+      overridden.setObjects(original);
+      expect(overridden.getObjects()).to.not.be.instanceOf(Collection);
+      expect(overridden.getObjects()).to.be.an('array');
+    });
   });
 
   describe('[] accessibility', function () {
@@ -421,6 +428,124 @@ describe('Collection', function () {
     it('should get an object using [index]', () => {
       const coll = new Collection([1, 2, 3]);
       expect(coll[1]).to.equal(2);
+    });
+  });
+
+  describe('#concat()', () => {
+    it('should concat objects from an array', () => {
+      const coll = new Collection([1, 2, 3]);
+      const toAdd = [4, 5, 6];
+      const concatenated = coll.concat(toAdd);
+      expect(concatenated.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6]);
+    });
+    it('should concat objects from a collection', () => {
+      const coll = new Collection([1, 2, 3]);
+      const toAdd = new Collection([4, 5, 6]);
+      const concatenated = coll.concat(toAdd);
+      expect(concatenated.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6]);
+    });
+  });
+
+  describe('#join()', () => {
+    it('should join elements', () => {
+      expect(new Collection([1, 2, 3]).join('')).to.equal('123');
+    });
+  });
+
+  describe('#splice()', () => {
+    it('should splice objects', () => {
+      const coll = new Collection([1, 2, 3]);
+      const result = coll.splice(1, 2);
+      expect(result.toArray()).to.deep.equal([2, 3]);
+      expect(coll.toArray()).to.deep.equal([1]);
+    });
+    it('should splice objects with replacements', () => {
+      const coll = new Collection([1, 2, 3]);
+      const result = coll.splice(1, 2, 2, 3);
+      expect(result.toArray()).to.deep.equal([2, 3]);
+      expect(coll.toArray()).to.deep.equal([1, 2, 3]);
+    });
+  });
+
+  describe('#entries()', () => {
+    it('should return an iterator', () => {
+      const coll = new Collection([1, 2]);
+      const entries = coll.entries();
+      expect(entries.next()).to.deep.equal({ value: [0, 1], done: false });
+      expect(entries.next()).to.deep.equal({ value: [1, 2], done: false });
+    });
+  });
+
+  describe('#values()', () => {
+    it('should throw an error', () => {
+      const coll = new Collection([1, 2]);
+      expect(() => coll.values()).to.throw(/supported/);
+    });
+  });
+
+  describe('#keys()', () => {
+    it('should return an iterator', () => {
+      const coll = new Collection([1, 2]);
+      const keys = coll.keys();
+      expect(keys.next()).to.deep.equal({ value: 0, done: false });
+      expect(keys.next()).to.deep.equal({ value: 1, done: false });
+    });
+  });
+
+  describe('#copyWithin()', () => {
+    it('should copy elements', () => {
+      const coll = new Collection([1, 2, 3, 4, 5]);
+      coll.copyWithin(0, 3, 4);
+      expect(coll.toArray()).to.deep.equal([4, 2, 3, 4, 5]);
+      coll.copyWithin(1, 3);
+      expect(coll.toArray()).to.deep.equal([4, 4, 5, 4, 5]);
+    });
+  });
+
+  describe('#findIndex()', () => {
+    it('should find and return index', () => {
+      const coll = new Collection([1, 2, 3, 3, 4]);
+      expect(coll.findIndex(value => value === 3)).to.equal(2);
+    });
+    it('should return -1', () => {
+      const coll = new Collection([1, 2, 3]);
+      expect(coll.findIndex(value => value === 4)).to.equal(-1);
+    });
+  });
+
+  describe('#sort()', () => {
+    it('should sort objects', () => {
+      const coll = new Collection([5, 4, 3, 2, 1]);
+      coll.sort();
+      expect(coll.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+    });
+    it('should sort objects with a callback', () => {
+      const coll = new Collection([5, 3, 2, 4, 1]);
+      coll.sort((a, b) => a - b);
+      expect(coll.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+    });
+  });
+
+  describe('#fill()', () => {
+    it('should fill with value', () => {
+      const coll = new Collection([1, 2, 3, 4, 5, 6]);
+      coll.fill(0, 3, 5);
+      expect(coll.toArray()).to.deep.equal([1, 2, 3, 0, 0, 6]);
+    });
+  });
+
+  describe('Callback binding', () => {
+    it('should use default binding', () => {
+      const coll = new Collection([1]);
+      coll.forEach(function() { expect(this).to.equal(undefined); });
+    });
+    it('should use thisArg', () => {
+      const coll = new Collection([1]);
+      coll.forEach(function() { expect(this).to.equal(coll); }, coll);
+    });
+    it('should use callback binding', () => {
+      const coll = new Collection([1]);
+      coll.forEach(function() { expect(this).to.equal(coll); }.bind(coll));
     });
   });
 });

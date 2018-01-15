@@ -57,7 +57,7 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public concat(...values: T[][]): ICollection<T> {
-    const objects = this.getObjects().concat(...values);
+    const objects = this.getObjects().concat(...values.map(value => Array.from(value)));
     return this.factory<T>(objects);
   }
 
@@ -65,8 +65,7 @@ export class Collection<T> implements ICollection<T> {
     return this.objects.join(char);
   }
 
-  public splice(start: number, deleteCount?: number): ICollection<T>;
-  public splice(start: number, deleteCount: number, ...replacements: T[]): ICollection<T> {
+  public splice(start: number, deleteCount?: number, ...replacements: T[]): ICollection<T> {
     const removed = this.objects.splice(start, deleteCount, ...replacements);
     return this.factory<T>(removed);
   }
@@ -79,8 +78,9 @@ export class Collection<T> implements ICollection<T> {
     return this.objects.keys();
   }
 
-  public values() {
-    return this.objects.values();
+  public values(): IterableIterator<T> {
+    throw new Error(`Array#values() is not supported by Node at the moment.`);
+    // return this.objects.values();
   }
 
   public copyWithin(target: number, start?: number, end?: number): this {
@@ -324,6 +324,7 @@ export class Collection<T> implements ICollection<T> {
     }
   }
 
+  /* istanbul ignore next */
   public [Symbol.unscopables](): { copyWithin: boolean, entries: boolean, keys: boolean, fill: boolean, find: boolean, findIndex: boolean, values: boolean } {
     return this.objects[Symbol.unscopables]();
   }
