@@ -409,4 +409,8 @@ export class Collection<T> implements ICollection<T> {
   public static isCollection<T>(obj: any): obj is ICollection<T> {
     return obj instanceof Collection;
   }
+
+  public static isArrayCompatible<T>(obj: any): obj is Array<T> {
+    return Array.isArray(obj) || Collection.isCollection<T>(obj);
+  }
 }
