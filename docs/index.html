@@ -65,7 +65,7 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="collection">Collection</h1>
-				<p>Async ready array like class. Offers most array methods, plus a bunch of async iterations and some common Lodash methods out of the box.</p>
+				<p>Async ready, chainable, highly convenient array compatible class. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.</p>
 				<h2 id="requirements">Requirements</h2>
 				<ul>
 					<li><code>node &gt;= 7.10</code></li>
@@ -74,6 +74,45 @@
 				<h2 id="installation">Installation</h2>
 				<p><code>npm i @bluejay/collection [--save]</code></p>
 				<h2 id="usage">Usage</h2>
+				<h3 id="array-compatibility-vs-inheritance">Array compatibility VS inheritance</h3>
+				<p>Collections are fully compatible with the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">ES6 array specification</a>. However, a <code>Collection</code> <strong>does not</strong> inherit from <code>Array</code>. Instead, it keeps track of an internal array and <em>forwards</em> method calls to it.</p>
+				<p>In practice:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
+
+<span class="hljs-built_in">Array</span>.isArray(collection); <span class="hljs-comment">// false</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">bar: <span class="hljs-built_in">number</span>[]</span>) </span>{
+  <span class="hljs-comment">// Do stuff</span>
+}
+
+foo([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]); <span class="hljs-comment">// Compiles</span>
+foo(collection); <span class="hljs-comment">// Compiles too!</span>
+</code></pre>
+				<p>If you wish to check if an object is a collection, use:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
+
+Collection.isCollection(collection); <span class="hljs-comment">// true</span>
+</code></pre>
+				<p>If, for example, you have a loosely typed argument and wish to know if a value supports array methods, use:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> values = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];
+<span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection(values);
+
+Collection.isArrayCompatible(values); <span class="hljs-comment">// true</span>
+Collection.isArrayCompatible(collection); <span class="hljs-comment">// true</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">bar: <span class="hljs-built_in">any</span></span>) </span>{
+  <span class="hljs-keyword">if</span> (Collection.isArrayCompatible(bar)) {
+    <span class="hljs-comment">// bar can be an array or a collection here</span>
+    bar.forEach(...); <span class="hljs-comment">// This will compile</span>
+  }
+}
+</code></pre>
+				<p>Additionally, you can still use <code>Array.from()</code> since a collection is <em>iterable</em>:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
+
+<span class="hljs-built_in">Array</span>.from(collection); <span class="hljs-comment">// [1, 2, 3]</span>
+</code></pre>
+				<h3 id="basic-usage">Basic usage</h3>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@bluejay/collection'</span>;
 
 <span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([{ foo: <span class="hljs-number">1</span> }, { foo: <span class="hljs-number">2</span> }, { foo: <span class="hljs-number">3</span> }]); <span class="hljs-comment">// Initialize with an array</span>
@@ -91,19 +130,19 @@ collection.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 collection.map(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(el.foo)); <span class="hljs-comment">// 1, 2, 3</span>
 
 <span class="hljs-comment">// Async array methods</span>
-<span class="hljs-keyword">await</span> collection.mapSeries(<span class="hljs-keyword">async</span> el =&gt; el.foo * <span class="hljs-number">2</span>); <span class="hljs-comment">// [2, 4, 6]</span>
-<span class="hljs-keyword">await</span> collection.mapParallel(<span class="hljs-keyword">async</span> el =&gt; el.foo * <span class="hljs-number">2</span>); <span class="hljs-comment">// [2, 4, 6]</span>
+<span class="hljs-keyword">await</span> collection.mapSeries(<span class="hljs-keyword">async</span> el =&gt; el.foo * <span class="hljs-number">2</span>); <span class="hljs-comment">// Collection&lt;[2, 4, 6]&gt;</span>
+<span class="hljs-keyword">await</span> collection.mapParallel(<span class="hljs-keyword">async</span> el =&gt; el.foo * <span class="hljs-number">2</span>); <span class="hljs-comment">// Collection&lt;[2, 4, 6]&gt;</span>
 
 <span class="hljs-comment">// Lodash methods</span>
 collection.findByProperties({ foo: <span class="hljs-number">1</span> }); <span class="hljs-comment">// { foo: 1 }</span>
-collection.mapByProperty(<span class="hljs-string">'foo'</span>); <span class="hljs-comment">// [1, 2, 3]</span>
+collection.mapByProperty(<span class="hljs-string">'foo'</span>); <span class="hljs-comment">// Collection&lt;[1, 2, 3]&gt;</span>
 
 <span class="hljs-comment">// Iterate</span>
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> object of collection) {
   <span class="hljs-comment">// Do something</span>
 }
 </code></pre>
-				<h2 id="documentation">Documentation</h2>
+				<h2 id="api-documentation">API Documentation</h2>
 				<p>See <a href="https://bluebirds-blue-jay.github.io/collection/">Github Pages</a>.</p>
 			</div>
 		</div>
