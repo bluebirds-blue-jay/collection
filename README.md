@@ -99,6 +99,74 @@ for (const object of collection) {
 }
 ```
 
+### Collections and inheritance
+
+To create a Collection subclass, just do what you do best:
+
+```typescript
+class MyCollection<T> extends Collection<T> {
+  private persistent: 
+  
+  public constructor(objects: T[], options: { persistent: boolean }) {
+    super(objects);
+    this.persistent = options.persistent;
+  }
+  
+  public isPersistent() {
+    return this.persistent;
+  }
+}
+
+const instance = new MyCollection([1, 2, 3], { persistent: true });
+
+instance.size(); // 3
+instance.isPersistent(); // true
+```
+
+You will, however, soon notice that methods that return a collection return an instance of `Collection`, not `Mycollection`.
+
+```typescript
+const filtered = instance.filter(value => value >= 2);
+filtered.toArray(); // [2, 3]
+filtered.isPersistent(); // Compilation error! `isPersistent()` does not exist on type `Collection`
+```
+
+This is because this library has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which the library calls each item it needs to create a new Collection. 
+
+```typescript
+class MyCollection<T> extends Collection<T> {
+  private persistent: 
+  
+  public constructor(objects: T[], options: { persistent: boolean }) {
+    super(objects);
+    this.persistent = options.persistent;
+  }
+  
+  protected factory<Y>(objects: Y[]) { // We don't know which type exactly we're getting here since `map()` and other methods might create collections of a different type than T
+    return new MyCollection<Y>(objects, { persistent: this.persistent });
+  }
+  
+  public isPersistent() {
+    return this.persistent;
+  }
+}
+
+const instance = new MyCollection([1, 2, 3], { persistent: true });
+
+instance.isPersistent(); // true
+
+const filtered = instance.filter(value => value >= 2);
+
+filtered.isPersistent(); // true - Not compilation error anymore
+
+instance.forEach((value, index, currentObj: MyCollection<number>) => { // Note that we need to explicitly set the type here as TS doesn't manage to infer it from the implementation
+  currentObj.isPersistent(); // true
+});
+```
+
+
+**Note:** While we made sure to provide a way for you to override the instances created by the library, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don't explicitly need to.  
+
 ## API Documentation
 
 See [Github Pages](https://bluebirds-blue-jay.github.io/collection/).
