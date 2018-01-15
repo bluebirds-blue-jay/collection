@@ -48,7 +48,6 @@ describe('Collection', function () {
         order.push(item);
         return item;
       });
-      console.log(map, map.toArray());
       expect(map.toArray()).to.deep.equal([1, 2, 3]);
       expect(order).to.deep.equal([1, 2, 3]);
     });
