@@ -414,31 +414,3 @@ export class Collection<T> implements ICollection<T> {
     return Array.isArray(obj) || Collection.isCollection<T>(obj);
   }
 }
-
-
-class Child<T> extends Collection<T> {
-  private luckyNumber: number;
-
-  public constructor(luckyNumber: number, objects: T[]) {
-    super(objects);
-    this.luckyNumber = luckyNumber;
-  }
-
-  public getLuckyNumber() {
-    return this.luckyNumber;
-  }
-
-  protected factory<Y>(objects: Y[]) {
-    return new Child(this.luckyNumber, objects);
-  }
-}
-
-const child = new Child(7, [1, 2, 3]);
-
-child.splice(1, 2);
-
-child.getLuckyNumber();
-
-child.forEach((element, index, currentObj: Child<number>) => {
-  currentObj.getLuckyNumber();
-});
