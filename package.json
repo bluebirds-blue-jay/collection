@@ -1,13 +1,13 @@
 {
   "name": "@bluejay/collection",
-  "version": "2.3.1",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require ./node_modules/ts-node/register --require ./test/setup.js ./test/**/*.test.ts",
     "docs": "./node_modules/.bin/typedoc --out docs --mode file --excludePrivate ./index.ts",
-    "cov": "./node_modules/.bin/nyc --reporter lcov npm run test",
-    "prepare": "rm -rf dts && tsc && tsc --outDir dts -d"
+    "cov": "./node_modules/.bin/nyc --reporter lcov npm run test && ./node_modules/.bin/opn ./coverage/lcov-report/collection/src/classes/collection.ts.html",
+    "prepare": "rm -rf dts && ./node_modules/.bin/tsc && ./node_modules/.bin/tsc --outDir dts -d"
   },
   "author": "Sylvain Estevez",
   "typings": "dts/index.d.ts",
@@ -24,8 +24,9 @@
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
     "nyc": "^11.2.1",
+    "opn-cli": "3.1.0",
     "ts-node": "^3.3.0",
     "typedoc": "^0.9.0",
-    "typescript": "^2.5.3"
+    "typescript": "2.5.3"
   }
 }
