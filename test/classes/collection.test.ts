@@ -10,7 +10,7 @@ describe('Collection', function () {
     it('should build a collection from an array', () => {
       expect(new Collection([1, 2, 3]).getObjects()).to.deep.equal([1, 2, 3]);
     });
-    it.skip('should be an array', () => {
+    it('should be an array', () => {
       expect(Array.isArray(new Collection([1, 2, 3]))).to.equal(true);
     });
   });
@@ -325,7 +325,7 @@ describe('Collection', function () {
     it('should return the collection objects', () => {
       const objects = [1, 2, 3];
       const coll = new Collection(objects);
-      expect(coll.getObjects()).to.equal(objects);
+      expect(coll.getObjects()).to.equal(coll);
     });
   });
 
@@ -359,7 +359,7 @@ describe('Collection', function () {
     });
   });
 
-  describe('#reserve()', function () {
+  describe('#reverse()', function () {
     it('should reverse objects', () => {
       const coll = new Collection([1, 2, 3]);
       coll.reverse();
@@ -407,13 +407,12 @@ describe('Collection', function () {
       const coll = new Collection([1, 2, 3]);
       const objects = [4, 5, 6];
       coll.setObjects(objects);
-      expect(coll.getObjects()).to.equal(objects);
+      expect(coll.getObjects()).to.deep.equal(objects);
     });
     it('should store an array from a collection', () => {
       const original = new Collection([1, 2, 3]);
       const overridden = new Collection();
       overridden.setObjects(original);
-      expect(overridden.getObjects()).to.not.be.instanceOf(Collection);
       expect(overridden.getObjects()).to.be.an('array');
     });
   });
@@ -472,13 +471,6 @@ describe('Collection', function () {
       const entries = coll.entries();
       expect(entries.next()).to.deep.equal({ value: [0, 1], done: false });
       expect(entries.next()).to.deep.equal({ value: [1, 2], done: false });
-    });
-  });
-
-  describe('#values()', () => {
-    it('should throw an error', () => {
-      const coll = new Collection([1, 2]);
-      expect(() => coll.values()).to.throw(/supported/);
     });
   });
 
@@ -545,6 +537,43 @@ describe('Collection', function () {
     it('should use callback binding', () => {
       const coll = new Collection([1]);
       coll.forEach(function() { expect(this).to.equal(coll); }.bind(coll));
+    });
+  });
+
+  describe('Length update', () => {
+    it('should maintain a proper length', () => {
+      const coll = new Collection([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      expect(coll.length).to.equal(9);
+      coll.unshift(0);
+      expect(coll.length).to.equal(10);
+      expect(coll.slice(5).length).to.equal(5);
+      coll.shift();
+      expect(coll.length).to.equal(9);
+      coll.push(0);
+      expect(coll.length).to.equal(10);
+      coll.compact();
+      expect(coll.length).to.equal(9);
+      coll[9] = 10;
+      expect(coll.length).to.equal(10);
+      coll.setAt(10, 11);
+      expect(coll.length).to.equal(11);
+    });
+  });
+
+  describe('Array.from()', () => {
+    it('should return an array', () => {
+      const coll = new Collection([1, 2, 3]);
+      const arr = Array.from(coll);
+      expect(arr).to.deep.equal([1, 2, 3]);
+      expect(arr).to.not.be.instanceOf(Collection);
+    });
+  });
+
+  describe('JSON.stringify()', () => {
+    it('should stringify as a valid array', () => {
+      const str = JSON.stringify(new Collection([1, 2, 3]));
+      expect(str).to.equal('[1,2,3]');
+      expect(JSON.parse(str)).to.deep.equal([1, 2, 3]);
     });
   });
 });
