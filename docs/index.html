@@ -65,7 +65,7 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="collection">Collection</h1>
-				<p>Async ready, chainable, highly convenient array compatible class. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.</p>
+				<p>Async ready, chainable, highly convenient array subclass. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.</p>
 				<h2 id="requirements">Requirements</h2>
 				<ul>
 					<li><code>node &gt;= 7.10</code></li>
@@ -74,12 +74,12 @@
 				<h2 id="installation">Installation</h2>
 				<p><code>npm i @bluejay/collection [--save]</code></p>
 				<h2 id="usage">Usage</h2>
-				<h3 id="array-compatibility-vs-inheritance">Array compatibility VS inheritance</h3>
-				<p>Collections are fully compatible with the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">ES6 array specification</a>. However, a <code>Collection</code> <strong>does not</strong> inherit from <code>Array</code>. Instead, it keeps track of an internal array and <em>forwards</em> method calls to it.</p>
+				<h3 id="array-inheritance">Array inheritance</h3>
+				<p>A <code>Collection</code> IS an <code>Array</code>. Collections are fully compatible with the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">ES6 array specification</a>.</p>
 				<p>In practice:</p>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
 
-<span class="hljs-built_in">Array</span>.isArray(collection); <span class="hljs-comment">// false</span>
+<span class="hljs-built_in">Array</span>.isArray(collection); <span class="hljs-comment">// true</span>
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">bar: <span class="hljs-built_in">number</span>[]</span>) </span>{
   <span class="hljs-comment">// Do stuff</span>
@@ -87,32 +87,22 @@
 
 foo([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]); <span class="hljs-comment">// Compiles</span>
 foo(collection); <span class="hljs-comment">// Compiles too!</span>
+
+<span class="hljs-built_in">JSON</span>.stringify(collection); <span class="hljs-comment">// [1,2,3]</span>
+
+<span class="hljs-built_in">Array</span>.from(collection); <span class="hljs-comment">// [1,2,3]</span>
 </code></pre>
-				<p>If you wish to check if an object is a collection, use:</p>
+				<p>If you wish to check if an object is a collection, use <code>Collection.isCollection()</code>:</p>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
 
 Collection.isCollection(collection); <span class="hljs-comment">// true</span>
 </code></pre>
-				<p>If, for example, you have a loosely typed argument and wish to know if a value supports array methods, use:</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> values = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];
-<span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection(values);
-
-Collection.isArrayCompatible(values); <span class="hljs-comment">// true</span>
-Collection.isArrayCompatible(collection); <span class="hljs-comment">// true</span>
-
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">bar: <span class="hljs-built_in">any</span></span>) </span>{
-  <span class="hljs-keyword">if</span> (Collection.isArrayCompatible(bar)) {
-    <span class="hljs-comment">// bar can be an array or a collection here</span>
-    bar.forEach(...); <span class="hljs-comment">// This will compile</span>
-  }
-}
-</code></pre>
-				<p>Additionally, you can still use <code>Array.from()</code> since a collection is <em>iterable</em>:</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
-
-<span class="hljs-built_in">Array</span>.from(collection); <span class="hljs-comment">// [1, 2, 3]</span>
-</code></pre>
-				<h3 id="basic-usage">Basic usage</h3>
+				<h3 id="available-methods">Available methods</h3>
+				<ul>
+					<li>All array methods are supported</li>
+					<li>Some <code>Lodash</code> methods such as <code>omit()</code> or <code>pick()</code> are built-in as instance methods</li>
+					<li>A few async methods allow you to perform async operations directly from the collection itself</li>
+				</ul>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@bluejay/collection'</span>;
 
 <span class="hljs-keyword">const</span> collection = <span class="hljs-keyword">new</span> Collection([{ foo: <span class="hljs-number">1</span> }, { foo: <span class="hljs-number">2</span> }, { foo: <span class="hljs-number">3</span> }]); <span class="hljs-comment">// Initialize with an array</span>
@@ -142,6 +132,62 @@ collection.mapByProperty(<span class="hljs-string">'foo'</span>); <span class="h
   <span class="hljs-comment">// Do something</span>
 }
 </code></pre>
+				<h3 id="collections-and-inheritance">Collections and inheritance</h3>
+				<p>To create a Collection subclass, just do what you do best:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> MyCollection&lt;T&gt; <span class="hljs-keyword">extends</span> Collection&lt;T&gt; {
+  <span class="hljs-keyword">private</span> persistent: 
+
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">constructor</span>(<span class="hljs-params">objects: T[], options: { persistent: <span class="hljs-built_in">boolean</span> }</span>) {
+    <span class="hljs-keyword">super</span>(objects);
+    <span class="hljs-keyword">this</span>.persistent = options.persistent;
+  }
+
+  <span class="hljs-keyword">public</span> isPersistent() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.persistent;
+  }
+}
+
+<span class="hljs-keyword">const</span> instance = <span class="hljs-keyword">new</span> MyCollection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], { persistent: <span class="hljs-literal">true</span> });
+
+instance.size(); <span class="hljs-comment">// 3</span>
+instance.isPersistent(); <span class="hljs-comment">// true</span>
+</code></pre>
+				<p>You will, however, soon notice that methods that return a collection return an instance of <code>Collection</code>, not <code>MyCollection</code>.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">const</span> filtered = instance.filter(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value &gt;= <span class="hljs-number">2</span>);
+filtered.toArray(); <span class="hljs-comment">// [2, 3]</span>
+filtered.isPersistent(); <span class="hljs-comment">// Compilation error! `isPersistent()` does not exist on type `Collection`</span>
+</code></pre>
+				<p>This is because Bluejay has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the <code>factory()</code> method which Bluejay calls each time it needs to create a new Collection. </p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> MyCollection&lt;T&gt; <span class="hljs-keyword">extends</span> Collection&lt;T&gt; {
+  <span class="hljs-keyword">private</span> persistent: 
+
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">constructor</span>(<span class="hljs-params">objects: T[], options: { persistent: <span class="hljs-built_in">boolean</span> }</span>) {
+    <span class="hljs-keyword">super</span>(objects);
+    <span class="hljs-keyword">this</span>.persistent = options.persistent;
+  }
+
+  <span class="hljs-keyword">protected</span> factory&lt;Y&gt;(objects: Y[]) { <span class="hljs-comment">// We don't know which type exactly we're getting here since `map()` and other methods might create collections of a different type than T</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyCollection&lt;Y&gt;(objects, { persistent: <span class="hljs-keyword">this</span>.persistent });
+  }
+
+  <span class="hljs-keyword">public</span> isPersistent() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.persistent;
+  }
+}
+
+<span class="hljs-keyword">const</span> instance = <span class="hljs-keyword">new</span> MyCollection([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], { persistent: <span class="hljs-literal">true</span> });
+
+instance.isPersistent(); <span class="hljs-comment">// true</span>
+
+<span class="hljs-keyword">const</span> filtered = instance.filter(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> value &gt;= <span class="hljs-number">2</span>);
+
+filtered.isPersistent(); <span class="hljs-comment">// true - Not compilation error anymore</span>
+
+instance.forEach(<span class="hljs-function">(<span class="hljs-params">value, index, currentObj: MyCollection&lt;<span class="hljs-built_in">number</span>&gt;</span>) =&gt;</span> { <span class="hljs-comment">// Note that we need to explicitly set the type here as TS doesn't manage to infer it from the implementation</span>
+  currentObj.isPersistent(); <span class="hljs-comment">// true</span>
+});
+</code></pre>
+				<p><strong>Note:</strong> While we made sure to provide a way for you to override the instances created by Bluejay, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don&#39;t explicitly need to.  </p>
 				<h2 id="api-documentation">API Documentation</h2>
 				<p>See <a href="https://bluebirds-blue-jay.github.io/collection/">Github Pages</a>.</p>
 			</div>
