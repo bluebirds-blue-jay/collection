@@ -1,6 +1,6 @@
 # Collection
 
-Async ready, chainable, highly convenient array compatible class. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.
+Async ready, chainable, highly convenient array subclass. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.
 
 ## Requirements
 
@@ -13,16 +13,16 @@ Async ready, chainable, highly convenient array compatible class. Supports all a
 
 ## Usage
 
-### Array compatibility VS inheritance
+### Array inheritance
 
-Collections are fully compatible with the [ES6 array specification](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array). However, a `Collection` **does not** inherit from / **is not** an `Array`. Instead, it **implements** the `Array` interface. Internally through, it keeps track of an actual array and *forwards* method calls to it.
+A `Collection` IS an `Array`. Collections are fully compatible with the [ES6 array specification](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).
 
 In practice:
 
 ```typescript
 const collection = new Collection([1, 2, 3]);
 
-Array.isArray(collection); // false
+Array.isArray(collection); // true
 
 function foo(bar: number[]) {
   // Do stuff
@@ -30,6 +30,10 @@ function foo(bar: number[]) {
 
 foo([1, 2, 3]); // Compiles
 foo(collection); // Compiles too!
+
+JSON.stringify(collection); // [1,2,3]
+
+Array.from(collection); // [1,2,3]
 ```
 
 
@@ -39,31 +43,6 @@ If you wish to check if an object is a collection, use `Collection.isCollection(
 const collection = new Collection([1, 2, 3]);
 
 Collection.isCollection(collection); // true
-```
-
-If you wish to check if an object is either a `Collection` or an `Array`, use `Collection.isArrayCompatible()`:
-
-```typescript
-const values = [1, 2, 3]; 
-const collection = new Collection(values);
-
-Collection.isArrayCompatible(values); // true
-Collection.isArrayCompatible(collection); // true
-
-function foo(bar: any) {
-  if (Collection.isArrayCompatible(bar)) {
-    // bar can be an array or a collection here
-    bar.forEach(...); // This will compile
-  }
-}
-```
-
-Additionally, you can still use `Array.from()` since a `Collection` is *iterable*:
-
-```typescript
-const collection = new Collection([1, 2, 3]);
-
-Array.from(collection); // [1, 2, 3]
 ```
 
 ### Available methods
@@ -127,7 +106,7 @@ instance.size(); // 3
 instance.isPersistent(); // true
 ```
 
-You will, however, soon notice that methods that return a collection return an instance of `Collection`, not `Mycollection`.
+You will, however, soon notice that methods that return a collection return an instance of `Collection`, not `MyCollection`.
 
 ```typescript
 const filtered = instance.filter(value => value >= 2);
@@ -135,7 +114,7 @@ filtered.toArray(); // [2, 3]
 filtered.isPersistent(); // Compilation error! `isPersistent()` does not exist on type `Collection`
 ```
 
-This is because this Bluejay has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which Bluejay calls each time it needs to create a new Collection. 
+This is because Bluejay has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which Bluejay calls each time it needs to create a new Collection. 
 
 ```typescript
 class MyCollection<T> extends Collection<T> {
