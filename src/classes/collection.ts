@@ -2,89 +2,30 @@ import { ICollection } from '../interfaces/collection';
 import * as Lodash from 'lodash';
 import { omit, Omit, pick } from '@bluejay/utils';
 
-export class Collection<T> implements ICollection<T> {
-  [index: number]: T; // Objects are accessible through collection[index]
-
-  // Array compatibility
-  public get length() {
-    return this.size();
-  }
-
-  private _objects: T[];
-
-  private get objects() {
-    return this._objects;
-  }
-
-  private set objects(value: T[]) {
-    // Ensures that `objects` is always a native array
-    if (Collection.isCollection<T>(value)) {
-      value = value.toArray();
-    }
-
-    this._objects = value;
-  }
-
+export class Collection<T> extends Array<T> implements ICollection<T> {
   public constructor(objects: T[] = []) {
-    this.objects = objects;
-
-    return new Proxy(this, {
-      get(target: Collection<T>, name: string) {
-        // If the property is an index, then return the object at this index.
-        if (!Lodash.isSymbol(name)) {
-          const int = parseInt(name, 10);
-          if (Lodash.isInteger(int)) {
-            return target.getAt(int);
-          }
-        }
-
-        // Otherwise return the requested property.
-        return target[name];
-      },
-
-      set(target: Collection<T>, name: string, value: any) {
-        if (!Lodash.isSymbol(name)) {
-          const int = parseInt(name, 10);
-          if (Lodash.isInteger(int)) {
-            target.setAt(int, value as T);
-            return true;
-          }
-        }
-
-        return (target[name] = value);
+    if (objects.length > 1) {
+      super(...objects);
+    } else {
+      super(objects.length);
+      if (objects.length) {
+        this[0] = objects[0]
       }
-    });
+    }
   }
 
   public concat(...values: T[][]): ICollection<T> {
-    const objects = this.getObjects().concat(...values.map(value => Array.from(value)));
+    const objects = super.concat(...values.map(value => Array.from(value)));
     return this.factory<T>(objects);
   }
 
-  public join(char: string): string {
-    return this.objects.join(char);
-  }
-
   public splice(start: number, deleteCount?: number, ...replacements: T[]): ICollection<T> {
-    const removed = this.objects.splice(start, deleteCount, ...replacements);
+    const removed = super.splice.apply(this, arguments);
     return this.factory<T>(removed);
   }
 
-  public entries() {
-    return this.objects.entries();
-  }
-
-  public keys() {
-    return this.objects.keys();
-  }
-
-  public values(): IterableIterator<T> {
-    throw new Error(`Array#values() is not supported by Node at the moment.`);
-    // return this.objects.values();
-  }
-
   public copyWithin(target: number, start?: number, end?: number): this {
-    this.objects.copyWithin(target, start, end);
+    super.copyWithin(target, start, end);
     return this;
   }
 
@@ -104,17 +45,17 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public sort(comparator?: (a: T, b: T) => number): this {
-    this.objects.sort(comparator);
+    super.sort(comparator);
     return this;
   }
 
   public fill(object: T, start?: number, end?: number): this {
-    this.objects.fill(object, start, end);
+    super.fill(object, start, end);
     return this;
   }
 
   public compact(): this {
-    this.objects = Lodash.compact(this.objects);
+    this.setObjects(Lodash.compact(this));
     return this;
   }
 
@@ -154,7 +95,7 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public filterByProperties(properties: Partial<T>): ICollection<T> {
-    const objects = Lodash.filter(this.objects, properties as any);
+    const objects = Lodash.filter(this, properties as any);
     return this.factory<T>(objects);
   }
 
@@ -171,8 +112,8 @@ export class Collection<T> implements ICollection<T> {
     return undefined;
   }
 
-  public findByProperties(properties: Partial<T>): T {
-    return Lodash.find(this.objects, properties as any);
+  public findByProperties(properties: Partial<T>): T | undefined {
+    return Lodash.find(this, properties as any);
   }
 
   public forEach(callback: (object: T, index: number, collection: ICollection<T>) => void, thisArg?: any): void {
@@ -184,26 +125,18 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public mapByProperty<P extends keyof T>(property: P, options: { unique?: boolean } = {}): ICollection<T[P]> {
-    const results = Lodash.map(this.objects, property);
+    const results = Lodash.map(this, property);
     const final = options.unique ? Lodash.uniq(results) : results;
     return this.factory<T[P]>(final);
   }
 
   public keyByProperty<P extends keyof T>(property: P): { [p: string]: T; } {
-    return Lodash.keyBy(this.objects, property);
+    return Lodash.keyBy(this, property);
   }
 
   public groupByProperty<P extends keyof T>(property: P): { [p: string]: ICollection<T>; } {
-    const raw = Lodash.groupBy(this.objects, property);
+    const raw = Lodash.groupBy(this, property);
     return Object.keys(raw).reduce((acc, key) => Object.assign(acc, { [key]: this.factory<T>(raw[key]) }), {});
-  }
-
-  public includes(object: T, startAt?: number): boolean {
-    return this.objects.includes(object, startAt);
-  }
-
-  public indexOf(object: T, startAt?: number): number {
-    return this.objects.indexOf(object, startAt);
   }
 
   public some(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): boolean {
@@ -231,16 +164,12 @@ export class Collection<T> implements ICollection<T> {
     return result;
   }
 
-  public lastIndexOf(object: T, startAt: number = this.lastIndex()): number {
-    return this.objects.lastIndexOf(object, startAt);
-  }
-
   public getAt(index: number): T {
-    return this.objects[index];
+    return this[index];
   }
 
   public setAt(index: number, value: T): this {
-    this.objects[index] = value;
+    this[index] = value;
     return this;
   }
 
@@ -265,7 +194,7 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public assignEach(properties: Partial<T>): this {
-    for (const object of this.objects) {
+    for (const object of this) {
       if (!Lodash.isNil(object)) {
         Object.assign(object, properties);
       }
@@ -279,58 +208,29 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public slice(from: number = 0, to: number = this.size()): ICollection<T> {
-    return this.factory<T>(this.objects.slice(from, to));
+    const res = super.slice(from, to);
+    return this.factory<T>(res);
   }
 
   public orderBy(properties: (keyof T)[] | keyof T, orders?: ('asc' | 'desc')[]): ICollection<T> {
-    return this.factory<T>(Lodash.orderBy(this.objects, properties, orders));
+    return this.factory<T>(Lodash.orderBy(this, properties, orders));
   }
 
   public toArray(): T[] {
-    // Copy the array to ensure that the instance is not modified.
-    return this.objects.slice();
+    return Array.from(this);
   }
 
   public uniq(): ICollection<T> {
-    return this.factory<T>(Lodash.uniq(this.objects));
-  }
-
-  public push(...objects: T[]): number {
-    this.objects.push(...objects);
-    return this.size();
-  }
-
-  public pop(): T {
-    return this.objects.pop();
+    return this.factory<T>(Lodash.uniq(this));
   }
 
   public reverse(): this {
-    this.objects.reverse();
+    super.reverse();
     return this;
   }
 
-  public shift(): T {
-    return this.objects.shift();
-  }
-
-  public unshift(...objects: T[]): number {
-    this.objects.unshift(...objects);
-    return this.size();
-  }
-
-  public *[Symbol.iterator](): IterableIterator<T> {
-    for (const object of this.objects) {
-      yield object;
-    }
-  }
-
-  /* istanbul ignore next */
-  public [Symbol.unscopables](): { copyWithin: boolean, entries: boolean, keys: boolean, fill: boolean, find: boolean, findIndex: boolean, values: boolean } {
-    return this.objects[Symbol.unscopables]();
-  }
-
   public size(): number {
-    return this.objects.length;
+    return this.length;
   }
 
   public isEmpty(): boolean {
@@ -348,7 +248,7 @@ export class Collection<T> implements ICollection<T> {
   public async forEachParallel(callback: (item: T, index: number, collection: ICollection<T>) => Promise<void>, thisArg?: any): Promise<void> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
-    await Promise.all(this.objects.map(async (item, index) => {
+    await Promise.all(this.map(async (item, index) => {
       await callback(item, index, this);
     }));
   }
@@ -369,7 +269,7 @@ export class Collection<T> implements ICollection<T> {
   public async mapParallel<R>(callback: (item: T, index: number, collection: ICollection<T>) => Promise<R>, thisArg?: any): Promise<ICollection<R>> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
-    const results = await Promise.all(this.objects.map(async (item: T, index: number) => {
+    const results = await Promise.all(this.map(async (item: T, index: number) => {
       return await callback(item, index, this);
     }));
 
@@ -387,11 +287,12 @@ export class Collection<T> implements ICollection<T> {
   }
 
   public getObjects(): T[] {
-    return this.objects;
+    return this;
   }
 
   public setObjects(objects: T[]): this {
-    this.objects = objects;
+    this.splice(0);
+    this.push(...objects);
     return this;
   }
 
