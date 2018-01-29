@@ -451,17 +451,85 @@ describe('Collection', function () {
   });
 
   describe('#splice()', () => {
+    it('should remove 0 elements from index 2, and insert "drum"', () => {
+      const coll = new Collection(['angel', 'clown', 'mandarin', 'sturgeon']);
+      const arr = ['angel', 'clown', 'mandarin', 'sturgeon'];
+      const collResult = coll.splice(2, 0, 'drum');
+      const arrResult = arr.splice(2, 0, 'drum');
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should splice all objects', () => {
+      const coll = new Collection([1, 2, 3]);
+      const arr = [1, 2, 3];
+      const collResult = coll.splice(0);
+      const arrResult = arr.splice(0);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
     it('should splice objects', () => {
       const coll = new Collection([1, 2, 3]);
-      const result = coll.splice(1, 2);
-      expect(result.toArray()).to.deep.equal([2, 3]);
-      expect(coll.toArray()).to.deep.equal([1]);
+      const arr = [1, 2, 3];
+      const collResult = coll.splice(1, 2);
+      const arrResult = arr.splice(1, 2);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
     });
     it('should splice objects with replacements', () => {
       const coll = new Collection([1, 2, 3]);
-      const result = coll.splice(1, 2, 2, 3);
-      expect(result.toArray()).to.deep.equal([2, 3]);
-      expect(coll.toArray()).to.deep.equal([1, 2, 3]);
+      const arr = [1, 2, 3];
+      const collResult = coll.splice(1, 2, 2, 3);
+      const arrResult = arr.splice(1, 2, 2, 3);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should remove 1 element from index 3', () => {
+      const coll = new Collection(['angel', 'clown', 'drum', 'mandarin', 'sturgeon']);
+      const arr = ['angel', 'clown', 'drum', 'mandarin', 'sturgeon'];
+      const collResult = coll.splice(3, 1);
+      const arrResult = arr.splice(3, 1);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should remove 1 element from index 2, and insert "trumpet"', () => {
+      const coll = new Collection(['angel', 'clown', 'drum', 'sturgeon']);
+      const arr = ['angel', 'clown', 'drum', 'sturgeon'];
+      const collResult = coll.splice(2, 1, 'trumpet');
+      const arrResult = arr.splice(2, 1, 'trumpet');
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should remove 2 elements from index 0, and insert "parrot", "anemone" and "blue"', () => {
+      const coll = new Collection(['angel', 'clown', 'trumpet', 'sturgeon']);
+      const arr = ['angel', 'clown', 'trumpet', 'sturgeon'];
+      const collResult = coll.splice(0, 2, 'parrot', 'anemone', 'blue');
+      const arrResult = arr.splice(0, 2, 'parrot', 'anemone', 'blue');
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should remove 2 elements from index 2', () => {
+      const coll = new Collection(['parrot', 'anemone', 'blue', 'trumpet', 'sturgeon']);
+      const arr = ['parrot', 'anemone', 'blue', 'trumpet', 'sturgeon'];
+      const collResult = coll.splice(coll.length - 3, 2);
+      const arrResult = arr.splice(arr.length - 3, 2);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should remove 1 element from index -2', () => {
+      const coll = new Collection(['angel', 'clown', 'mandarin', 'sturgeon']);
+      const arr = ['angel', 'clown', 'mandarin', 'sturgeon'];
+      const collResult = coll.splice(-2, 1);
+      const arrResult = arr.splice(-2, 1);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
+    });
+    it('should remove all elements after index 2 (incl.)', () => {
+      const coll = new Collection(['angel', 'clown', 'mandarin', 'sturgeon']);
+      const arr = ['angel', 'clown', 'mandarin', 'sturgeon'];
+      const collResult = coll.splice(2);
+      const arrResult = arr.splice(2);
+      expect(coll).to.deep.equal(arr);
+      expect(collResult).to.deep.equal(arrResult);
     });
   });
 
@@ -574,6 +642,33 @@ describe('Collection', function () {
       const str = JSON.stringify(new Collection([1, 2, 3]));
       expect(str).to.equal('[1,2,3]');
       expect(JSON.parse(str)).to.deep.equal([1, 2, 3]);
+    });
+  });
+
+  describe('Inheritance', () => {
+    type T = { str: string };
+    class MyCollection extends Collection<T> {
+      private foo: boolean;
+
+      public constructor(objects: T[], options: { foo: boolean }) {
+        super(objects);
+        this.foo = options.foo;
+      }
+    }
+
+    it('should filter', () => {
+      const coll = new MyCollection([{ str: 'abc' }], { foo: true });
+      coll.filterByProperties({ str: 'cba' });
+    });
+
+    it('should map', () => {
+      const coll = new MyCollection([{ str: 'abc' }], { foo: true });
+      coll.map(item => item);
+    });
+
+    it('should set objects', () => {
+      const coll = new MyCollection([], { foo: true });
+      coll.setObjects([{ str: 'abc' }]);
     });
   });
 });

@@ -19,9 +19,60 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.factory<T>(objects);
   }
 
+  /**
+   * This is a full re-implementation of splice which we're forced to provide in order to support inheritance of Collection.
+   * This implementation is based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+   */
   public splice(start: number, deleteCount?: number, ...replacements: T[]): ICollection<T> {
-    const removed = super.splice.apply(this, arguments);
-    return this.factory<T>(removed);
+    const removed = this.factory<T>([]);
+    const len = this.size();
+
+    if (start < 0) {
+      // Start from length - (start - 1)
+      // If this is negative, then start at 0
+      start = Math.max(len + start, 0);
+    } else if (start > len) {
+      start = len;
+    }
+
+    if (!Lodash.isNumber(deleteCount) || deleteCount > len - start) {
+      deleteCount = len - start;
+    }
+
+    // Build a new array with final values
+    const rewritten: T[] = [];
+
+    // Keep the part before "start"
+    for (let i = 0; i < start; i++) {
+      rewritten[i] = this.getAt(i);
+    }
+
+    for (let i = start, j = start + deleteCount; i < j; i++) {
+      removed.push(this.getAt(i));
+    }
+
+    // Insert replacements
+    for (const replacement of replacements) {
+      rewritten.push(replacement);
+    }
+
+    // Insert non deleted elements
+    for (let i = start + deleteCount; i < len; i++) {
+      rewritten.push(this.getAt(i));
+    }
+
+    // Rewrite the current array
+    for (let i = 0, len = rewritten.length; i < len; i++) {
+      this.setAt(i, rewritten[i]);
+    }
+
+    // Remove exceeding elements
+    while (this.size() > rewritten.length) {
+      this.pop();
+    }
+
+    // Finally return the removed elements
+    return removed;
   }
 
   public copyWithin(target: number, start?: number, end?: number): this {
