@@ -120,7 +120,7 @@ describe('Collection', function () {
       coll.forEach(element => expect(element.b).to.equal(true));
     });
     it('should only assign on non nil objects', () => {
-      const coll = new Collection<{ a: number, b?: boolean }>([{ a: 1 }, null, undefined]);
+      const coll = new Collection<{ a: number, b?: boolean } | null | undefined>([{ a: 1 }, null, undefined]);
       coll.assignEach({ b: true });
       expect(coll.getAt(0)).to.deep.equal({ a: 1, b: true });
       expect(coll.getAt(1)).to.equal(null);
@@ -596,15 +596,15 @@ describe('Collection', function () {
   describe('Callback binding', () => {
     it('should use default binding', () => {
       const coll = new Collection([1]);
-      coll.forEach(function() { expect(this).to.equal(undefined); });
+      coll.forEach(function(this: undefined) { expect(this).to.equal(undefined); });
     });
     it('should use thisArg', () => {
       const coll = new Collection([1]);
-      coll.forEach(function() { expect(this).to.equal(coll); }, coll);
+      coll.forEach(function(this: Collection<any>) { expect(this).to.equal(coll); }, coll);
     });
     it('should use callback binding', () => {
       const coll = new Collection([1]);
-      coll.forEach(function() { expect(this).to.equal(coll); }.bind(coll));
+      coll.forEach(function(this: Collection<any>) { expect(this).to.equal(coll); }.bind(coll));
     });
   });
 
