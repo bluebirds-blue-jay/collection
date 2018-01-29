@@ -17,13 +17,13 @@ export interface ICollection<T> extends Array<T> {
   fill(value: T, start?: number, end?: number): this;
   copyWithin(target: number, start?: number, end?: number): this;
   compact(): this;
-  find(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): T;
+  find(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): T | undefined;
   pick<K extends keyof T>(key: K | K[]): ICollection<Pick<T, K>>;
   omit<K extends keyof T>(key: K | K[]): ICollection<Omit<T, K>>;
   every(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): boolean;
   filter(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): ICollection<T>;
   filterByProperties(properties: Partial<T>): ICollection<T>;
-  findByProperties(properties: Partial<T>): T;
+  findByProperties(properties: Partial<T>): T | undefined;
   forEach(callback: (object: T, index: number, collection: ICollection<T>) => void, thisArg?: any): void;
   mapByProperty<P extends keyof T>(property: P): (T[P])[];
   keyByProperty<P extends keyof T>(property: P): { [p: string]: T; };
@@ -44,9 +44,9 @@ export interface ICollection<T> extends Array<T> {
   toArray(): T[];
   uniq(): ICollection<T>;
   push(...objects: T[]): number;
-  pop(): T;
+  pop(): T | undefined;
   reverse(): this;
-  shift(): T;
+  shift(): T | undefined;
   unshift(...objects: T[]): number;
   [Symbol.iterator](): IterableIterator<T>;
   size(): number;

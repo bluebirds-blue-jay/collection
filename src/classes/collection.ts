@@ -76,7 +76,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public copyWithin(target: number, start?: number, end?: number): this {
-    super.copyWithin(target, start, end);
+    super.copyWithin(target, start as number, end);
     return this;
   }
 
@@ -150,7 +150,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.factory<T>(objects);
   }
 
-  public find(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): T {
+  public find(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): T | undefined {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     for (let i = 0, len = this.size(); i < len; i++) {
