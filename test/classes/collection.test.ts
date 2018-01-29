@@ -670,5 +670,22 @@ describe('Collection', function () {
       const coll = new MyCollection([], { foo: true });
       coll.setObjects([{ str: 'abc' }]);
     });
+
+    it('should support destructuring', () => {
+      const coll = new MyCollection([{ str: 'abc' }], { foo: true });
+      const [ first ] = coll;
+      expect(first).to.deep.equal({ str: 'abc' });
+    });
+  });
+
+  describe('Destructuring', () => {
+    it('should support destructuring', () => {
+      const coll = new Collection([1, 2, 3]);
+      const [ first ] = coll;
+      expect(first).to.equal(1);
+      const [ , second, , unexistant ] = coll;
+      expect(second).to.equal(2);
+      expect(unexistant).to.equal(undefined);
+    });
   });
 });
