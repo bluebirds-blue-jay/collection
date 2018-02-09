@@ -1,6 +1,7 @@
 import { Collection } from '../../';
 import { waitRandom } from '../resources/utils/wait-random';
 import { wait } from '@bluejay/utils';
+import { ICollection } from '../../src/interfaces/collection';
 
 describe('Collection', function () {
   describe('constructor', function () {
@@ -675,6 +676,46 @@ describe('Collection', function () {
       const coll = new MyCollection([{ str: 'abc' }], { foo: true });
       const [ first ] = coll;
       expect(first).to.deep.equal({ str: 'abc' });
+    });
+  });
+
+  describe('#clone()', () => {
+    it('should clone a collection', () => {
+      const original = new Collection([1, 2, 3]);
+      const cloned = original.clone();
+      expect(cloned).to.deep.equal(original);
+      expect(cloned).to.not.equal(original);
+    });
+    it('should throw for a subclass', () => {
+      class MyCollection extends Collection<number> {
+        private foo: string;
+
+        public constructor(objects: number[], options: { foo: string }) {
+          super(objects);
+          this.foo = options.foo;
+        }
+      }
+
+      const collection  = new MyCollection([1, 2, 3], { foo: 'bar' });
+      expect(() => collection.clone()).to.throw(/subclass/);
+    });
+  });
+
+  describe('#cloneDeep()', () => {
+    it('should clone a collection', () => {
+      const a = new Date();
+      const b = new Date();
+      const c = new Date();
+      const original = new Collection([{ foo: a }, { foo: b }, { foo: c }]);
+      const cloned = original.cloneDeep();
+      expect(cloned).to.deep.equal(original);
+      expect(cloned).to.not.equal(original);
+      expect(cloned.getAt(0).foo).to.deep.equal(a);
+      expect(cloned.getAt(0).foo).to.not.equal(a);
+      expect(cloned.getAt(1).foo).to.deep.equal(b);
+      expect(cloned.getAt(1).foo).to.not.equal(b);
+      expect(cloned.getAt(2).foo).to.deep.equal(c);
+      expect(cloned.getAt(2).foo).to.not.equal(c);
     });
   });
 

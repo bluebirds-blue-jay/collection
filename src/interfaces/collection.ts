@@ -48,6 +48,8 @@ export interface ICollection<T> extends Array<T> {
   reverse(): this;
   shift(): T | undefined;
   unshift(...objects: T[]): number;
+  clone<R extends this>(): R;
+  cloneDeep<R extends this>(): R;
   [Symbol.iterator](): IterableIterator<T>;
   size(): number;
   isEmpty(): boolean;
