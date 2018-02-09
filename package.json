@@ -13,7 +13,7 @@
   "typings": "dts/index.d.ts",
   "license": "MIT",
   "dependencies": {
-    "@bluejay/utils": "^3.2.0",
+    "@bluejay/utils": "3.4.1",
     "lodash": "^4.17.4"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { ICollection } from '../interfaces/collection';
 import * as Lodash from 'lodash';
-import { omit, Omit, pick } from '@bluejay/utils';
+import { omit, Omit, pick, cloneDeep } from '@bluejay/utils';
 
 const { version } = require('../../package.json');
 const VERSION_PROPERTY = '__bluejayCollectionVersion';
@@ -367,7 +367,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public cloneDeep<R extends this>(): R {
-    return this.clone().map(object => Lodash.cloneDeep(object)) as R;
+    return this.clone().map(object => cloneDeep(object)) as R;
   }
 
   protected factory<Y>(objects: Y[]): ICollection<Y> {
