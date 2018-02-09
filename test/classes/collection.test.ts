@@ -688,4 +688,18 @@ describe('Collection', function () {
       expect(unexistant).to.equal(undefined);
     });
   });
+
+  describe('.isCollection()', () => {
+    it('should return true for a real instance', () => {
+      expect(Collection.isCollection(new Collection([1, 2, 3]))).to.equal(true);
+    });
+    it('should return true for a fake instance', () => {
+      const arr = [1, 2, 3];
+      (arr as any).__bluejayCollectionVersion = '1.1.1';
+      expect(Collection.isCollection(arr)).to.equal(true);
+    });
+    it('should return false', () => {
+      expect(Collection.isCollection([1, 2, 3])).to.equal(false);
+    });
+  });
 });

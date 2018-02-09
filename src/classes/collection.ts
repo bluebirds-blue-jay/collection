@@ -2,6 +2,9 @@ import { ICollection } from '../interfaces/collection';
 import * as Lodash from 'lodash';
 import { omit, Omit, pick } from '@bluejay/utils';
 
+const { version } = require('../../package.json');
+const VERSION_PROPERTY = '__bluejayCollectionVersion';
+
 export class Collection<T> extends Array<T> implements ICollection<T> {
   public constructor(objects: T[] = []) {
     if (objects.length > 1) {
@@ -12,6 +15,11 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
         this[0] = objects[0]
       }
     }
+
+    Object.defineProperty(this, VERSION_PROPERTY, {
+      value: version,
+      enumerable: false
+    });
   }
 
   public concat(...values: T[][]): ICollection<T> {
@@ -359,7 +367,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public static isCollection<T>(obj: any): obj is ICollection<T> {
-    return obj instanceof Collection;
+    return obj instanceof Collection || Array.isArray(obj) && typeof obj[VERSION_PROPERTY] === 'string';
   }
 
   public static isArrayCompatible<T>(obj: any): obj is Array<T> {
