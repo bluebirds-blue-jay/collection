@@ -443,6 +443,13 @@ describe('Collection', function () {
       const concatenated = coll.concat(toAdd);
       expect(concatenated.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6]);
     });
+    it('should concat with an empty collection', () => {
+      const coll1 = new Collection<number>();
+      const coll2 = new Collection([1, 2, 3]);
+      const coll3 = new Collection<number>();
+      const result = coll1.concat(coll3).concat(coll2);
+      expect(result).to.deep.equal([1, 2, 3]);
+    });
   });
 
   describe('#join()', () => {

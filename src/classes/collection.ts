@@ -26,9 +26,18 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     this.isPureCollection = new.target === Collection;
   }
 
-  public concat(...values: T[][]): ICollection<T> {
-    const objects = super.concat(...values.map(value => Array.from(value)));
-    return this.factory<T>(objects);
+  public concat(...values: (T[] | T)[]): ICollection<T> {
+    const ret = this.factory<T>([]);
+
+    for (const value of values) {
+      if (Array.isArray(value)) {
+        ret.push(...value);
+      } else {
+        ret.push(value);
+      }
+    }
+
+    return ret;
   }
 
   /**
