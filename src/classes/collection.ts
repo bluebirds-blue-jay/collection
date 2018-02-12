@@ -6,7 +6,7 @@ const { version } = require('../../package.json');
 const VERSION_PROPERTY = '__bluejayCollectionVersion';
 
 export class Collection<T> extends Array<T> implements ICollection<T> {
-  private isPureCollection: boolean;
+  private __isPureCollection: boolean;
 
   public constructor(objects: T[] = []) {
     if (objects.length > 1) {
@@ -23,11 +23,14 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
       enumerable: false
     });
 
-    this.isPureCollection = new.target === Collection;
+    Object.defineProperty(this, '__isPureCollection', {
+      value: new.target === Collection,
+      enumerable: false
+    });
   }
 
   public concat(...values: (T[] | T)[]): ICollection<T> {
-    const ret = this.factory<T>([]);
+    const ret = this.factory<T>(this);
 
     for (const value of values) {
       if (Array.isArray(value)) {
@@ -369,7 +372,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public clone<R extends this>(): R {
-    if (!this.isPureCollection) {
+    if (!this.__isPureCollection) {
       throw new Error(`Collection subclasses do not support cloning.`);
     }
     return this.factory(this.getObjects()) as R;
