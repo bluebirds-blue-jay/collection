@@ -412,7 +412,7 @@ describe('Collection', function () {
     });
     it('should store an array from a collection', () => {
       const original = new Collection([1, 2, 3]);
-      const overridden = new Collection();
+      const overridden = new Collection<number>();
       overridden.setObjects(original);
       expect(overridden.getObjects()).to.be.an('array');
     });
