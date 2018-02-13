@@ -5,7 +5,7 @@ export interface ICollection<T> extends Array<T> {
   length: number;
   [Symbol.unscopables](): { copyWithin: boolean, entries: boolean, keys: boolean, fill: boolean, find: boolean, findIndex: boolean, values: boolean };
 
-  concat(...values: (T | T[])[]): ICollection<T>;
+  concat(...values: T[][]): ICollection<T>;
   join(char: string): string;
   sort(comparator?: (a: T, b: T) => number): this;
   splice(start: number, deleteCount?: number): ICollection<T>;

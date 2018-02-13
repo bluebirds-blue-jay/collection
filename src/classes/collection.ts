@@ -29,7 +29,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     });
   }
 
-  public concat(...values: (T[] | T)[]): ICollection<T> {
+  public concat(...values: T[][]): ICollection<T> {
     const ret = this.factory<T>(this);
 
     for (const value of values) {

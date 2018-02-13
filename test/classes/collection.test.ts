@@ -1,7 +1,6 @@
 import { Collection } from '../../';
 import { waitRandom } from '../resources/utils/wait-random';
 import { wait } from '@bluejay/utils';
-import { ICollection } from '../../src/interfaces/collection';
 
 describe('Collection', function () {
   describe('constructor', function () {
