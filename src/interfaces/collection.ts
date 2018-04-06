@@ -25,7 +25,7 @@ export interface ICollection<T> extends Array<T> {
   filterByProperties(properties: Partial<T>): ICollection<T>;
   findByProperties(properties: Partial<T>): T | undefined;
   forEach(callback: (object: T, index: number, collection: ICollection<T>) => void, thisArg?: any): void;
-  mapByProperty<P extends keyof T>(property: P): (T[P])[];
+  mapByProperty<P extends keyof T>(property: P, options?: { unique: boolean; }): ICollection<(T[P])>;
   keyByProperty<P extends keyof T>(property: P): { [p: string]: T; };
   groupByProperty<P extends keyof T>(property: P): { [p: string]: ICollection<T>; };
   includes(object: T, startAt?: number): boolean;
