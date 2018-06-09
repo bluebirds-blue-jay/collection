@@ -1,6 +1,6 @@
-import { ICollection } from '../interfaces/collection';
+import { cloneDeep, omit, Omit, pick } from '@bluejay/utils';
 import * as Lodash from 'lodash';
-import { omit, Omit, pick, cloneDeep } from '@bluejay/utils';
+import { ICollection } from '..';
 
 const { version } = require('../../package.json');
 const VERSION_PROPERTY = '__bluejayCollectionVersion';
@@ -12,7 +12,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     } else {
       super(objects.length);
       if (objects.length) {
-        this[0] = objects[0]
+        this[0] = objects[0];
       }
     }
 
@@ -42,8 +42,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   /**
-   * This is a full re-implementation of splice which we're forced to provide in order to support inheritance of Collection.
-   * This implementation is based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+   * This is a full re-implementation of splice which we're forced to provide in order to support inheritance of
+   * Collection.
+   * This implementation is based on
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
    */
   public splice(start: number, deleteCount?: number, ...replacements: T[]): ICollection<T> {
     const removed = this.factory<T>([]);
@@ -84,7 +86,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     }
 
     // Rewrite the current array
-    for (let i = 0, len = rewritten.length; i < len; i++) {
+    for (let i = 0, rewrittenLen = rewritten.length; i < rewrittenLen; i++) {
       this.setAt(i, rewritten[i]);
     }
 
@@ -102,7 +104,9 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this;
   }
 
-  public findIndex(callback: (this: void, object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): number {
+  public findIndex(
+    callback: (this: void, object: T, index: number, collection: this) => boolean, thisArg?: any
+  ): number {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     let index = -1;
@@ -140,7 +144,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.map(item => omit(item, key));
   }
 
-  public every(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): boolean {
+  public every(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): boolean {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -152,7 +156,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return true;
   }
 
-  public filter<S extends T>(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): ICollection<T> {
+  public filter(
+    callback: (object: T, index: number, collection: this) => boolean,
+    thisArg?: any
+  ): ICollection<T> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     const result = this.factory<T>([]);
@@ -172,7 +179,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.factory<T>(objects);
   }
 
-  public find(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): T | undefined {
+  public find(
+    callback: (object: T, index: number, collection: this) => boolean,
+    thisArg?: any
+  ): T | undefined {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -189,7 +199,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return Lodash.find(this, properties as any);
   }
 
-  public forEach(callback: (object: T, index: number, collection: ICollection<T>) => void, thisArg?: any): void {
+  public forEach(callback: (object: T, index: number, collection: this) => void, thisArg?: any): void {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -212,7 +222,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return Object.keys(raw).reduce((acc, key) => Object.assign(acc, { [key]: this.factory<T>(raw[key]) }), {});
   }
 
-  public some(callback: (object: T, index: number, collection: ICollection<T>) => boolean, thisArg?: any): boolean {
+  public some(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): boolean {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -224,7 +234,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return false;
   }
 
-  public map<R>(callback: (object: T, index: number, collection: ICollection<T>) => R, thisArg?: any): ICollection<R> {
+  public map<R>(callback: (object: T, index: number, collection: this) => R, thisArg?: any): ICollection<R> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     const result = this.factory<R>([]);
@@ -246,7 +256,11 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this;
   }
 
-  public reduce<R>(callback: (acc: R, object: T, index: number, collection: ICollection<T>) => R, initial: R, thisArg?: any): R {
+  public reduce<R>(
+    callback: (acc: R, object: T, index: number, collection: this) => R,
+    initial: R,
+    thisArg?: any
+  ): R {
     callback = Collection.bindCallback(callback, arguments, 3);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -256,7 +270,11 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return initial;
   }
 
-  public reduceRight<R>(callback: (acc: R, object: T, index: number, collection: ICollection<T>) => R, initial: R, thisArg = this): R {
+  public reduceRight<R>(
+    callback: (acc: R, object: T, index: number, collection: this) => R,
+    initial: R,
+    thisArg = this
+  ): R {
     callback = Collection.bindCallback(callback, arguments, 3);
 
     for (let i = this.lastIndex(); i > -1; i--) {
@@ -280,7 +298,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.size() - 1;
   }
 
-  public slice(from: number = 0, to: number = this.size()): ICollection<T> {
+  public slice(from = 0, to: number = this.size()): ICollection<T> {
     const res = super.slice(from, to);
     return this.factory<T>(res);
   }
@@ -310,7 +328,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.size() === 0;
   }
 
-  public async forEachSeries(callback: (item: T, index: number, collection: ICollection<T>) => Promise<void>, thisArg?: any): Promise<void> {
+  public async forEachSeries(
+    callback: (item: T, index: number, collection: this) => Promise<void>,
+    thisArg?: any
+  ): Promise<void> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -318,7 +339,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     }
   }
 
-  public async forEachParallel(callback: (item: T, index: number, collection: ICollection<T>) => Promise<void>, thisArg?: any): Promise<void> {
+  public async forEachParallel(
+    callback: (item: T, index: number, collection: this) => Promise<void>,
+    thisArg?: any
+  ): Promise<void> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     await Promise.all(this.map(async (item, index) => {
@@ -326,7 +350,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     }));
   }
 
-  public async mapSeries<R>(callback: (item: T, index: number, collection: ICollection<T>) => Promise<R>, thisArg?: any): Promise<ICollection<R>> {
+  public async mapSeries<R>(
+    callback: (item: T, index: number, collection: this) => Promise<R>,
+    thisArg?: any
+  ): Promise<ICollection<R>> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     const result = this.factory<R>([]);
@@ -339,7 +366,10 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return result;
   }
 
-  public async mapParallel<R>(callback: (item: T, index: number, collection: ICollection<T>) => Promise<R>, thisArg?: any): Promise<ICollection<R>> {
+  public async mapParallel<R>(
+    callback: (item: T, index: number, collection: this) => Promise<R>,
+    thisArg?: any
+  ): Promise<ICollection<R>> {
     callback = Collection.bindCallback(callback, arguments, 2);
 
     const results = await Promise.all(this.map(async (item: T, index: number) => {
@@ -349,7 +379,11 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this.factory<R>(results);
   }
 
-  public async reduceSeries<A>(callback: (acc: A, current: T, index: number, collection: ICollection<T>) => Promise<A>, initial: A, thisArg?: any): Promise<A> {
+  public async reduceSeries<A>(
+    callback: (acc: A, current: T, index: number, collection: this) => Promise<A>,
+    initial: A,
+    thisArg?: any
+  ): Promise<A> {
     callback = Collection.bindCallback(callback, arguments, 3);
 
     for (let i = 0, len = this.size(); i < len; i++) {
@@ -381,7 +415,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   protected factory<Y>(objects: Y[]): ICollection<Y> {
-    return new Collection<Y>(objects);
+    return new Collection<Y>(objects) as ICollection<Y>;
   }
 
   protected static bindCallback(callback: Function, args: IArguments, lengthIfPresent: number) {
@@ -392,7 +426,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public static isCollection<T>(obj: any): obj is ICollection<T> {
-    return obj instanceof Collection || Array.isArray(obj) && typeof obj[VERSION_PROPERTY] === 'string';
+    return obj instanceof Collection || Array.isArray(obj) && typeof (obj as any)[VERSION_PROPERTY] === 'string';
   }
 
   public static isArrayCompatible<T>(obj: any): obj is Array<T> {

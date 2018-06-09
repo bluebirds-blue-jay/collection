@@ -1,6 +1,6 @@
-import { Collection } from '../../';
-import { waitRandom } from '../resources/utils/wait-random';
 import { wait } from '@bluejay/utils';
+import { Collection } from '../../src';
+import { waitRandom } from '../resources/utils/wait-random';
 
 describe('Collection', function () {
   describe('constructor', function () {
@@ -178,13 +178,15 @@ describe('Collection', function () {
 
   describe('#pick()', function () {
     it('should pick keys from an array', () => {
-      expect(new Collection([{ a: 1, b: 1 }, { a: 2, b: 2 }]).pick(['a']).toArray()).to.deep.equal([{ a: 1 }, { a: 2 }]);
+      const result = new Collection([{ a: 1, b: 1 }, { a: 2, b: 2 }]).pick(['a']).toArray();
+      expect(result).to.deep.equal([{ a: 1 }, { a: 2 }]);
     });
   });
 
   describe('#omit()', function () {
     it('should omit keys from an array', () => {
-      expect(new Collection([{ a: 1, b: 1 }, { a: 2, b: 2 }]).omit(['a']).toArray()).to.deep.equal([{ b: 1 }, { b: 2 }]);
+      const result = new Collection([{ a: 1, b: 1 }, { a: 2, b: 2 }]).omit(['a']).toArray();
+      expect(result).to.deep.equal([{ b: 1 }, { b: 2 }]);
     });
   });
 
@@ -201,7 +203,8 @@ describe('Collection', function () {
 
   describe('#filter()', function () {
     it('should filter objects', () => {
-      expect(new Collection([1, 2, 4]).filter(value => value % 2 === 0).toArray()).to.deep.equal([2, 4]);
+      const result = new Collection([1, 2, 4]).filter(value => value % 2 === 0).toArray();
+      expect(result).to.deep.equal([2, 4]);
     });
   });
 
@@ -270,7 +273,8 @@ describe('Collection', function () {
 
   describe('#reduceRight()', function () {
     it('should reduce objects from the right', () => {
-      expect(new Collection([1, 2, 3]).reduceRight((acc, value) => acc + value, '')).to.equal('321');
+      const result = new Collection([1, 2, 3]).reduceRight((acc, value) => acc + value, '');
+      expect(result).to.equal('321');
     });
   });
 

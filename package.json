@@ -2,19 +2,24 @@
   "name": "@bluejay/collection",
   "version": "4.2.6",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "mocha --require ./node_modules/ts-node/register --require ./test/setup.js ./test/**/*.test.ts",
-    "docs": "./node_modules/.bin/typedoc --out docs --mode file --excludePrivate ./index.ts",
     "cov": "./node_modules/.bin/nyc --reporter lcov npm run test && ./node_modules/.bin/opn ./coverage/lcov-report/collection/src/classes/collection.ts.html",
-    "prepare": "rm -rf dts && ./node_modules/.bin/tsc && ./node_modules/.bin/tsc --outDir dts -d"
+    "lint": "./node_modules/.bin/tslint --project ./",
+    "fix": "./node_modules/.bin/tslint --fix --project ./",
+    "compile": "./node_modules/.bin/tsc",
+    "build": ""
   },
   "author": "Sylvain Estevez",
-  "typings": "dts/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bluebirds-blue-jay/collection"
+  },
   "license": "MIT",
   "dependencies": {
     "@bluejay/utils": "3.4.1",
-    "lodash": "^4.17.4"
+    "lodash": "4.17.10"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
@@ -23,10 +28,11 @@
     "@types/node": "^8.0.46",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
-    "nyc": "^11.2.1",
+    "nyc": "13.0.0",
     "opn-cli": "3.1.0",
     "ts-node": "4.1.0",
-    "typedoc": "^0.9.0",
+    "tslint": "5.10.0",
+    "typedoc": "0.11.1",
     "typescript": "2.5.3"
   }
 }
