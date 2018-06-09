@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node", "mocha"]
-  }
+    "types": ["node", "mocha", "chai", "sinon", "chai-subset"]
+  },
+  "exclude": []
 }

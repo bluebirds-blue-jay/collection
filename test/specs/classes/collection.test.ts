@@ -1,6 +1,6 @@
 import { wait } from '@bluejay/utils';
-import { Collection } from '../../src';
-import { waitRandom } from '../resources/utils/wait-random';
+import { Collection } from '../../../src/classes/collection';
+import { waitRandom } from '../../resources/utils/wait-random';
 
 describe('Collection', function () {
   describe('constructor', function () {

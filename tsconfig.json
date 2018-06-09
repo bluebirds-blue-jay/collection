@@ -8,6 +8,9 @@
     "alwaysStrict": true,
     "inlineSourceMap": true,
     "lib": ["es2017"],
-    "types": ["node", "mocha"]
-  }
+    "types": ["node"]
+  },
+  "include": [
+    "src"
+  ]
 }
