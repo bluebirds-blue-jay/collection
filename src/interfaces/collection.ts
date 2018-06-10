@@ -1,33 +1,14 @@
 import { Omit } from '@bluejay/utils';
 
 export interface ICollection<T> extends Array<T> {
-  [index: number]: T;
-  length: number;
-  [Symbol.unscopables](): {
-    copyWithin: boolean,
-    entries: boolean,
-    keys: boolean,
-    fill: boolean,
-    find: boolean,
-    findIndex: boolean,
-    values: boolean
-  };
-
   concat(...values: T[][]): ICollection<T>;
-  join(char: string): string;
   sort(comparator?: (a: T, b: T) => number): this;
   splice(start: number, deleteCount?: number): ICollection<T>;
   splice(start: number, deleteCount: number, ...replacements: T[]): ICollection<T>;
-  entries(): IterableIterator<[number, T]>;
-  keys(): IterableIterator<number>;
-  values(): IterableIterator<T>;
   findIndex(callback: (this: void, object: T, index: number, collection: this) => boolean): number;
   fill(value: T, start?: number, end?: number): this;
   copyWithin(target: number, start?: number, end?: number): this;
-  compact(): this;
   find(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): T | undefined;
-  pick<K extends keyof T>(key: K | K[]): ICollection<Pick<T, K>>;
-  omit<K extends keyof T>(key: K | K[]): ICollection<Omit<T, K>>;
   every(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): boolean;
   filter(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): ICollection<T>;
   filterByProperties(properties: Partial<T>): ICollection<T>;
@@ -36,37 +17,45 @@ export interface ICollection<T> extends Array<T> {
   mapByProperty<P extends keyof T>(property: P, options?: { unique: boolean; }): ICollection<(T[P])>;
   keyByProperty<P extends keyof T>(property: P): { [p: string]: T; };
   groupByProperty<P extends keyof T>(property: P): { [p: string]: ICollection<T>; };
-  includes(object: T, startAt?: number): boolean;
-  indexOf(object: T, startAt?: number): number;
   some(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): boolean;
   map<R>(callback: (object: T, index: number, collection: this) => R, thisArg?: any): ICollection<R>;
-  lastIndexOf(object: T, startAt?: number): number;
+  reverse(): this;
+  slice(from?: number, to?: number): ICollection<T>;
+  reduce(
+    callback: (previousValue: T, currentValue: T, currentIndex: number, collection: this) => T
+  ): T;
+  reduce(
+    callback: (previousValue: T, currentValue: T, currentIndex: number, collection: this) => T,
+    initialValue: T
+  ): T;
+  reduce<R>(
+    callback: (previousValue: R, currentValue: T, currentIndex: number, collection: this) => R,
+    initialValue: R
+  ): R;
+  reduceRight(
+    callback: (previousValue: T, currentValue: T, currentIndex: number, collection: this) => T
+  ): T;
+  reduceRight(
+    callback: (previousValue: T, currentValue: T, currentIndex: number, collection: this) => T,
+    initialValue: T
+  ): T;
+  reduceRight<R>(
+    callback: (previousValue: R, currentValue: T, currentIndex: number, collection: this) => R,
+    initialValue: R
+  ): R;
+
+  pick<K extends keyof T>(key: K | K[]): ICollection<Pick<T, K>>;
+  omit<K extends keyof T>(key: K | K[]): ICollection<Omit<T, K>>;
   getAt(index: number): T;
   setAt(index: number, value: T): this;
-  reduce<R>(
-    callback: (acc: R, object: T, index: number, collection: this) => R,
-    initial: R,
-    thisArg?: any
-  ): R;
-  reduceRight<R>(
-    callback: (acc: R, object: T, index: number, collection: this) => R,
-    initial: R,
-    thisArg?: any
-  ): R;
+  compact(): this;
   assignEach(properties: Partial<T>): this;
   lastIndex(): number | null;
-  slice(from?: number, to?: number): ICollection<T>;
   orderBy(properties: (keyof T)[] | keyof T, orders?: ('asc' | 'desc')[]): ICollection<T>;
   toArray(): T[];
   uniq(): ICollection<T>;
-  push(...objects: T[]): number;
-  pop(): T | undefined;
-  reverse(): this;
-  shift(): T | undefined;
-  unshift(...objects: T[]): number;
-  clone<R extends this>(): R;
-  cloneDeep<R extends this>(): R;
-  [Symbol.iterator](): IterableIterator<T>;
+  clone(): this;
+  cloneDeep(): this;
   size(): number;
   isEmpty(): boolean;
   forEachSeries(

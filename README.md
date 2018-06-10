@@ -5,7 +5,13 @@ Async ready, chainable, highly convenient array subclass. Supports all array met
 ## Requirements
 
 - `node >= 7.10`
-- `typescript >= 2.4`
+- `typescript >= 2.4`, tested with:
+  - `typescript@2.4`
+  - `typescript@2.5`
+  - `typescript@2.6`
+  - `typescript@2.7`
+  - `typescript@2.8`
+  - ~~`typescript@2.9`~~
 
 ## Installation
 

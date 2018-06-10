@@ -1,5 +1,6 @@
 import { wait } from '@bluejay/utils';
 import { expect } from 'chai';
+import { ICollection } from '../../src';
 import { Collection } from '../../src/classes/collection';
 import { waitRandom } from '../_resources/utils/wait-random';
 
@@ -13,6 +14,10 @@ describe('Collection', function () {
     });
     it('should be an array', () => {
       expect(Array.isArray(new Collection([1, 2, 3]))).to.equal(true);
+    });
+    it('should match interface', () => {
+      const coll: ICollection<number> = new Collection([1, 2, 3]);
+      expect(coll).to.be.instanceOf(Collection);
     });
   });
 
@@ -330,7 +335,7 @@ describe('Collection', function () {
     it('should return the collection objects', () => {
       const objects = [1, 2, 3];
       const coll = new Collection(objects);
-      expect(coll.getObjects()).to.equal(coll);
+      expect(coll.getObjects()).to.deep.equal(coll);
     });
   });
 
@@ -742,9 +747,9 @@ describe('Collection', function () {
       const coll = new Collection([1, 2, 3]);
       const [first] = coll;
       expect(first).to.equal(1);
-      const [, second, , unexistant] = coll;
+      const [, second, , undef] = coll;
       expect(second).to.equal(2);
-      expect(unexistant).to.equal(undefined);
+      expect(undef).to.equal(undefined);
     });
   });
 

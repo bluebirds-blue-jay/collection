@@ -13,7 +13,7 @@
   "all": true,
   "checkCoverage": true,
   "lines": 95,
-  "branches": 85,
+  "branches": 84,
   "statements": 95,
-  "functions": 95
+  "functions": 98
 }

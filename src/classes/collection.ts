@@ -214,11 +214,11 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public keyByProperty<P extends keyof T>(property: P): { [p: string]: T; } {
-    return Lodash.keyBy(this, property);
+    return Lodash.keyBy(this, property as string);
   }
 
   public groupByProperty<P extends keyof T>(property: P): { [p: string]: ICollection<T>; } {
-    const raw = Lodash.groupBy(this, property);
+    const raw = Lodash.groupBy(this, property as string);
     return Object.keys(raw).reduce((acc, key) => Object.assign(acc, { [key]: this.factory<T>(raw[key]) }), {});
   }
 
@@ -256,28 +256,32 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this;
   }
 
-  public reduce<R>(
-    callback: (acc: R, object: T, index: number, collection: this) => R,
-    initial: R,
-    thisArg?: any
-  ): R {
-    callback = Collection.bindCallback(callback, arguments, 3);
+  public reduce<R = T>(callback: (acc: R, object: T, index: number, collection: this) => R, initial?: R): R;
+  public reduce<R>(callback: (acc: R, object: T, index: number, collection: this) => R, initial: R): R {
+    let i = 0;
 
-    for (let i = 0, len = this.size(); i < len; i++) {
+    if (arguments.length < 2) {
+      i = 1;
+      initial = this.getAt(0) as any;
+    }
+
+    for (let len = this.size(); i < len; i++) {
       initial = callback(initial, this.getAt(i), i, this);
     }
 
     return initial;
   }
 
-  public reduceRight<R>(
-    callback: (acc: R, object: T, index: number, collection: this) => R,
-    initial: R,
-    thisArg = this
-  ): R {
-    callback = Collection.bindCallback(callback, arguments, 3);
+  public reduceRight<R = T>(callback: (acc: R, object: T, index: number, collection: this) => R, initial?: R): R;
+  public reduceRight<R>(callback: (acc: R, object: T, index: number, collection: this) => R, initial: R): R {
+    let i = this.lastIndex();
 
-    for (let i = this.lastIndex(); i > -1; i--) {
+    if (arguments.length < 2) {
+      i = i - 1;
+      initial = this.getAt(0) as any;
+    }
+
+    for (; i > -1; i--) {
       initial = callback(initial, this.getAt(i), i, this);
     }
 
@@ -304,7 +308,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public orderBy(properties: (keyof T)[] | keyof T, orders?: ('asc' | 'desc')[]): ICollection<T> {
-    return this.factory<T>(Lodash.orderBy(this, properties, orders));
+    return this.factory<T>(Lodash.orderBy(this, properties as string | string[], orders));
   }
 
   public toArray(): T[] {
@@ -394,7 +398,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public getObjects(): T[] {
-    return this;
+    return this.toArray();
   }
 
   public setObjects(objects: T[]): this {
@@ -403,15 +407,15 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
     return this;
   }
 
-  public clone<R extends this>(): R {
+  public clone(): this {
     if (!(this as any).__isPureCollection) {
       throw new Error(`Collection subclasses do not support cloning.`);
     }
-    return this.factory(this.getObjects()) as R;
+    return this.factory(this.getObjects()) as this;
   }
 
-  public cloneDeep<R extends this>(): R {
-    return this.clone().map(object => cloneDeep(object)) as R;
+  public cloneDeep(): this {
+    return this.clone().map(object => cloneDeep(object)) as this;
   }
 
   protected factory<Y>(objects: Y[]): ICollection<Y> {
