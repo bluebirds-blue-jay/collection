@@ -149,7 +149,3 @@ instance.forEach((value, index, currentObj: MyCollection<number>) => { // Note t
 
 
 **Note:** While we made sure to provide a way for you to override the instances created by Bluejay, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don't explicitly need to.
-
-## API Documentation
-
-See [Github Pages](https://bluebirds-blue-jay.github.io/collection/).
