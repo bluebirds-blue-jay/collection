@@ -6,9 +6,12 @@
     "noEmit": true,
     "strict": true,
     "alwaysStrict": true,
-    "inlineSourceMap": true,
+    "pretty": true,
+    "declaration": true,
+    "outDir": "dist",
     "lib": ["es2017"],
-    "types": ["node"]
+    "types": ["node", "mocha", "chai"],
+    "removeComments": true
   },
   "include": [
     "src"

@@ -1,0 +1,20 @@
+{
+  "extension": [
+    ".ts"
+  ],
+  "include": [
+    "src/classes",
+    "src/utils"
+  ],
+  "reporter": [
+    "text",
+    "text-summary",
+    "lcov"
+  ],
+  "all": true,
+  "checkCoverage": true,
+  "lines": 95,
+  "branches": 85,
+  "statements": 95,
+  "functions": 95
+}

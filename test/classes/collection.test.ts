@@ -1,6 +1,7 @@
 import { wait } from '@bluejay/utils';
-import { Collection } from '../../../src/classes/collection';
-import { waitRandom } from '../../resources/utils/wait-random';
+import { expect } from 'chai';
+import { Collection } from '../../src/classes/collection';
+import { waitRandom } from '../_resources/utils/wait-random';
 
 describe('Collection', function () {
   describe('constructor', function () {
@@ -607,15 +608,21 @@ describe('Collection', function () {
   describe('Callback binding', () => {
     it('should use default binding', () => {
       const coll = new Collection([1]);
-      coll.forEach(function(this: undefined) { expect(this).to.equal(undefined); });
+      coll.forEach(function (this: undefined) {
+        expect(this).to.equal(undefined);
+      });
     });
     it('should use thisArg', () => {
       const coll = new Collection([1]);
-      coll.forEach(function(this: Collection<any>) { expect(this).to.equal(coll); }, coll);
+      coll.forEach(function (this: Collection<any>) {
+        expect(this).to.equal(coll);
+      }, coll);
     });
     it('should use callback binding', () => {
       const coll = new Collection([1]);
-      coll.forEach(function(this: Collection<any>) { expect(this).to.equal(coll); }.bind(coll));
+      coll.forEach(function (this: Collection<any>) {
+        expect(this).to.equal(coll);
+      }.bind(coll));
     });
   });
 
@@ -658,6 +665,7 @@ describe('Collection', function () {
 
   describe('Inheritance', () => {
     type T = { str: string };
+
     class MyCollection extends Collection<T> {
       private foo: boolean;
 
@@ -684,7 +692,7 @@ describe('Collection', function () {
 
     it('should support destructuring', () => {
       const coll = new MyCollection([{ str: 'abc' }], { foo: true });
-      const [ first ] = coll;
+      const [first] = coll;
       expect(first).to.deep.equal({ str: 'abc' });
     });
   });
@@ -706,7 +714,7 @@ describe('Collection', function () {
         }
       }
 
-      const collection  = new MyCollection([1, 2, 3], { foo: 'bar' });
+      const collection = new MyCollection([1, 2, 3], { foo: 'bar' });
       expect(() => collection.clone()).to.throw(/subclass/);
     });
   });
@@ -732,9 +740,9 @@ describe('Collection', function () {
   describe('Destructuring', () => {
     it('should support destructuring', () => {
       const coll = new Collection([1, 2, 3]);
-      const [ first ] = coll;
+      const [first] = coll;
       expect(first).to.equal(1);
-      const [ , second, , unexistant ] = coll;
+      const [, second, , unexistant] = coll;
       expect(second).to.equal(2);
       expect(unexistant).to.equal(undefined);
     });
