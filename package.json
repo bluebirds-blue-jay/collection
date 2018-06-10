@@ -12,7 +12,9 @@
     "compile": "tsc",
     "build": "rm -rf dist && mkdir dist && tsc --noEmit false",
     "prepare": "tsc",
-    "prepublishOnly": "npm run lint && npm run cov && npm run build"
+    "prepublishOnly": "npm run lint && npm run cov && npm run build",
+    "travis": "tsc && npm run lint && npm run cov | ",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
     "dist/",
@@ -35,6 +37,7 @@
     "@types/mocha": "5.2.1",
     "@types/node": "8.0.46",
     "chai": "4.1.2",
+    "coveralls": "3.0.1",
     "mocha": "5.2.0",
     "nyc": "12.0.2",
     "ts-node": "6.1.0",

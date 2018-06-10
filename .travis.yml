@@ -7,4 +7,5 @@ node_js:
 cache:
   directories:
     - node_modules
-script: npm test
+script: npm run travis
+after_success: npm run coveralls

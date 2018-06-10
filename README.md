@@ -1,4 +1,4 @@
-# Collection
+# Collection [![Coverage Status](https://coveralls.io/repos/github/bluebirds-blue-jay/collection/badge.svg?branch=master)](https://coveralls.io/github/bluebirds-blue-jay/collection?branch=master)
 
 Async ready, chainable, highly convenient array subclass. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.
 
@@ -64,7 +64,7 @@ collection.setAt(1, 5);
 collection[1] = { foo: 18 };
 collection[1]; // { foo: 18 }
 
-// Regular array methods 
+// Regular array methods
 collection.forEach(el => console.log(el.foo)); // 1, 2, 3
 collection.map(el => console.log(el.foo)); // 1, 2, 3
 
@@ -88,13 +88,13 @@ To create a Collection subclass, just do what you do best:
 
 ```typescript
 class MyCollection<T> extends Collection<T> {
-  private persistent: 
-  
+  private persistent:
+
   public constructor(objects: T[], options: { persistent: boolean }) {
     super(objects);
     this.persistent = options.persistent;
   }
-  
+
   public isPersistent() {
     return this.persistent;
   }
@@ -114,21 +114,21 @@ filtered.toArray(); // [2, 3]
 filtered.isPersistent(); // Compilation error! `isPersistent()` does not exist on type `Collection`
 ```
 
-This is because Bluejay has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which Bluejay calls each time it needs to create a new Collection. 
+This is because Bluejay has no way to know which arguments your implementation requires. In order to solve this issue, we need to override the `factory()` method which Bluejay calls each time it needs to create a new Collection.
 
 ```typescript
 class MyCollection<T> extends Collection<T> {
-  private persistent: 
-  
+  private persistent:
+
   public constructor(objects: T[], options: { persistent: boolean }) {
     super(objects);
     this.persistent = options.persistent;
   }
-  
+
   protected factory<Y>(objects: Y[]) { // We don't know which type exactly we're getting here since `map()` and other methods might create collections of a different type than T
     return new MyCollection<Y>(objects, { persistent: this.persistent });
   }
-  
+
   public isPersistent() {
     return this.persistent;
   }
@@ -148,7 +148,7 @@ instance.forEach((value, index, currentObj: MyCollection<number>) => { // Note t
 ```
 
 
-**Note:** While we made sure to provide a way for you to override the instances created by Bluejay, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don't explicitly need to.  
+**Note:** While we made sure to provide a way for you to override the instances created by Bluejay, most implementations will not need such a complex setup. It is absolutely NOT necessary to override this method if you don't explicitly need to.
 
 ## API Documentation
 

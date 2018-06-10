@@ -8,8 +8,7 @@
   ],
   "reporter": [
     "text",
-    "text-summary",
-    "lcov"
+    "text-summary"
   ],
   "all": true,
   "checkCoverage": true,
