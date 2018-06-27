@@ -67,7 +67,7 @@ export interface ICollection<T> extends Array<T> {
     thisArg?: any
   ): Promise<void>;
   mapSeries<R>(callback: (item: T, index: number, collection: this) => Promise<R>): Promise<ICollection<R>>;
-  mapParallel<R>(callback: (item: T, index?: number) => Promise<R>): Promise<R[]>;
+  mapParallel<R>(callback: (item: T, index?: number) => Promise<R>): Promise<ICollection<R>>;
   reduceSeries<A>(
     callback: (acc: A, current: T, index: number, collection: this) => Promise<A>,
     initial: A,
