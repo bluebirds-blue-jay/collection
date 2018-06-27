@@ -1,6 +1,6 @@
 {
   "name": "@bluejay/collection",
-  "version": "4.2.7",
+  "version": "4.2.8",
   "description": "Convenient array subclass",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
