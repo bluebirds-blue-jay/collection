@@ -1,4 +1,8 @@
-# Collection [![npm version](https://badge.fury.io/js/%40bluejay%2Fcollection.svg)](https://badge.fury.io/js/%40bluejay%2Fcollection) [![Build Status](https://travis-ci.org/bluebirds-blue-jay/collection.svg?branch=master)](https://travis-ci.org/bluebirds-blue-jay/collection) [![Coverage Status](https://coveralls.io/repos/github/bluebirds-blue-jay/collection/badge.svg?branch=master)](https://coveralls.io/github/bluebirds-blue-jay/collection?branch=master)
+# Collection
+
+[![npm](https://img.shields.io/npm/v/@bluejay/collection.svg?style=flat-square)](https://www.npmjs.com/package/@bluejay/collection)
+ [![npm](https://img.shields.io/npm/dm/@bluejay/collection.svg?style=flat-square)](https://www.npmjs.com/package/@bluejay/collection)
+[![npm](https://img.shields.io/npm/l/@bluejay/collection.svg?style=flat-square)](https://www.npmjs.com/package/@bluejay/collection)
 
 Async ready, chainable, highly convenient array subclass. Supports all array methods, plus a bunch of async iterations and some common Lodash methods out of the box.
 
