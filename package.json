@@ -28,8 +28,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "lodash": "4.17.11",
-    "@bluejay/utils": "3.5.0"
+    "@bluejay/utils": "3.5.0",
+    "lodash": "4.17.15"
   },
   "devDependencies": {
     "@types/chai": "4.1.3",
