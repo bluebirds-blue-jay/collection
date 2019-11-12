@@ -8,7 +8,13 @@ const VERSION_PROPERTY = '__bluejayCollectionVersion';
 export class Collection<T> extends Array<T> implements ICollection<T> {
   public constructor(objects: T[] = []) {
     if (objects.length > 1) {
-      super(...objects);
+      const len = objects.length;
+
+      super(len);
+
+      for (let i = 0; i < len; i++) {
+        this[i] = objects[i];
+      }
     } else {
       super(objects.length);
       if (objects.length) {

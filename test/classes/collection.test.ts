@@ -19,6 +19,21 @@ describe('Collection', function () {
       const coll: ICollection<number> = new Collection([1, 2, 3]);
       expect(coll).to.be.instanceOf(Collection);
     });
+    it('should work on big arrays', () => {
+      const arr = [];
+      const n = 1000000;
+
+      for (let i = 0; i < n; i++) {
+        arr.push({
+          id: i,
+          name: i.toString()
+        });
+      }
+
+      const coll = new Collection(arr);
+
+      expect(coll).have.lengthOf(n);
+    });
   });
 
   describe('#forEachSeries()', function () {
