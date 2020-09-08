@@ -19,7 +19,7 @@ describe('Collection', function () {
       const coll: ICollection<number> = new Collection([1, 2, 3]);
       expect(coll).to.be.instanceOf(Collection);
     });
-    it('should work on big arrays', () => {
+    it('should instantiate a big array', () => {
       const arr = [];
       const n = 1000000;
 
@@ -473,6 +473,29 @@ describe('Collection', function () {
       const coll3 = new Collection<number>();
       const result = coll1.concat(coll3).concat(coll2);
       expect(result).to.deep.equal([1, 2, 3]);
+    });
+    it('should concat two big collections', () => {
+      const arr1 = [];
+      const arr2 = [];
+      const n = 1000000;
+
+      for (let i = 0; i < n; i++) {
+        arr1.push({
+          id: i,
+          name: i.toString()
+        });
+        arr2.push({
+          id: i,
+          name: i.toString()
+        });
+      }
+
+      const coll1 = new Collection(arr1);
+      const coll2 = new Collection(arr2);
+
+      const coll3 = coll1.concat(coll2);
+
+      expect(coll3).to.have.lengthOf(n * 2);
     });
   });
 

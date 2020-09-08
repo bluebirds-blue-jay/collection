@@ -38,7 +38,9 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
 
     for (const value of values) {
       if (Array.isArray(value)) {
-        ret.push(...value);
+        for (let i = 0, len = value.length; i < len; i++) {
+          ret.push(value[i]);
+        }
       } else {
         ret.push(value);
       }
