@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@bluejay/utils": "github:bluebirds-blue-jay/utils#85ad8726b775177f9c3563880496475285ae7430",
+    "@bluejay/utils": "github:bluebirds-blue-jay/utils#2b6878b3af61e34b487310bfa7e25af41ef4bee1",
     "lodash": "4.17.20"
   },
   "devDependencies": {
