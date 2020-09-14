@@ -8,6 +8,10 @@
     "alwaysStrict": true,
     "pretty": true,
     "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "inlineSourceMap": true,
     "outDir": "dist",
     "lib": ["es2017"],
     "types": ["node", "mocha", "chai"],
@@ -17,6 +21,7 @@
     "src"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib"
   ]
 }

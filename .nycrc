@@ -3,8 +3,7 @@
     ".ts"
   ],
   "include": [
-    "src/classes",
-    "src/utils"
+    "src/classes"
   ],
   "reporter": [
     "text",

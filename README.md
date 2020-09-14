@@ -8,14 +8,12 @@ Async ready, chainable, highly convenient array subclass. Supports all array met
 
 ## Requirements
 
-- `node >= 7.10`
-- `typescript >= 2.4`, tested with:
-  - `typescript@2.4`
-  - `typescript@2.5`
-  - `typescript@2.6`
-  - `typescript@2.7`
-  - `typescript@2.8`
-  - ~~`typescript@2.9`~~
+- `node >= 7.10`, tested with:
+  - `node@7.10.0`
+  - `node@8.6.0`
+  - `node@12.8.1`
+- `typescript >= 4.0`, tested with:
+  - `typescript@4.0.2`
 
 ## Installation
 
