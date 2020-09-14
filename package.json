@@ -34,7 +34,7 @@
     "collection"
   ],
   "dependencies": {
-    "@bluejay/utils": "4.0.0-alpha.8",
+    "@bluejay/utils": "4.0.0-alpha.9",
     "lodash": "4.17.20"
   },
   "devDependencies": {
