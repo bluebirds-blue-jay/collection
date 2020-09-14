@@ -1,4 +1,4 @@
-import { cloneDeep, omit, Omit, pick } from '@bluejay/utils';
+import { cloneDeep, omit, pick } from '@bluejay/utils';
 import * as Lodash from 'lodash';
 import { ICollection } from '..';
 
