@@ -149,7 +149,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public omit<K extends keyof T>(key: K | K[]): ICollection<Omit<T, K>> {
-    return this.map(item => omit(item, key));
+    return this.map(item => omit(item as any, key));
   }
 
   public every(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): boolean {
