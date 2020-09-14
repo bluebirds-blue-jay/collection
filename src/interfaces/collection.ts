@@ -1,5 +1,3 @@
-import { Omit } from '@bluejay/utils';
-
 export interface ICollection<T> extends Array<T> {
   concat(...values: T[][]): ICollection<T>;
   sort(comparator?: (a: T, b: T) => number): this;
