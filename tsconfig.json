@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
+    "strictNullChecks": true,
     "alwaysStrict": true,
     "pretty": true,
     "declaration": true,
@@ -13,8 +14,14 @@
     "suppressImplicitAnyIndexErrors": true,
     "inlineSourceMap": true,
     "outDir": "dist",
-    "lib": ["es2017"],
-    "types": ["node", "mocha", "chai"],
+    "lib": [
+      "es2017"
+    ],
+    "types": [
+      "node",
+      "mocha",
+      "chai"
+    ],
     "removeComments": true
   },
   "include": [

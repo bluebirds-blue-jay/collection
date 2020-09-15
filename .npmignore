@@ -4,5 +4,5 @@ node_modules/
 .idea/
 tsconfig.json
 *.ts
-!dts/**/*.d.ts
-dts/**/*.js
+!dist/**/*.d.ts
+dist/**/*.js
