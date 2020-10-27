@@ -5,18 +5,30 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
+    "strictNullChecks": true,
     "alwaysStrict": true,
     "pretty": true,
     "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "inlineSourceMap": true,
     "outDir": "dist",
-    "lib": ["es2017"],
-    "types": ["node", "mocha", "chai"],
+    "lib": [
+      "es2017"
+    ],
+    "types": [
+      "node",
+      "mocha",
+      "chai"
+    ],
     "removeComments": true
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib"
   ]
 }

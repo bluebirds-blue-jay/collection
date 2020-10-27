@@ -1,7 +1,7 @@
 import { wait } from '@bluejay/utils';
 import { expect } from 'chai';
 import { ICollection } from '../../src';
-import { Collection } from '../../src/classes/collection';
+import { Collection } from '../../src';
 import { waitRandom } from '../_resources/utils/wait-random';
 
 describe('Collection', function () {

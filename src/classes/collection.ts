@@ -1,4 +1,4 @@
-import { cloneDeep, omit, Omit, pick } from '@bluejay/utils';
+import { omit, pick } from '@bluejay/utils';
 import * as Lodash from 'lodash';
 import { ICollection } from '..';
 
@@ -149,7 +149,7 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public omit<K extends keyof T>(key: K | K[]): ICollection<Omit<T, K>> {
-    return this.map(item => omit(item, key));
+    return this.map(item => omit(item as T, key));
   }
 
   public every(callback: (object: T, index: number, collection: this) => boolean, thisArg?: any): boolean {
@@ -423,7 +423,15 @@ export class Collection<T> extends Array<T> implements ICollection<T> {
   }
 
   public cloneDeep(): this {
-    return this.clone().map(object => cloneDeep(object)) as this;
+    return this.clone().map(object => {
+      return Lodash.cloneDeepWith(object, value => {
+        if (Collection.isCollection(value)) {
+          return value.cloneDeep();
+        }
+
+        return undefined;
+      });
+    }) as this;
   }
 
   protected factory<Y>(objects: Y[]): ICollection<Y> {

@@ -3,17 +3,17 @@
     ".ts"
   ],
   "include": [
-    "src/classes",
-    "src/utils"
+    "src/classes"
   ],
   "reporter": [
     "text",
-    "text-summary"
+    "text-summary",
+    "html"
   ],
   "all": true,
   "checkCoverage": true,
   "lines": 95,
-  "branches": 84,
-  "statements": 95,
+  "branches": 82,
+  "statements": 96,
   "functions": 98
 }
