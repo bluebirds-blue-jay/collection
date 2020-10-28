@@ -1,5 +1,6 @@
 import { wait } from '@bluejay/utils';
 import { expect } from 'chai';
+import * as Lodash from 'lodash';
 import { ICollection } from '../../src';
 import { Collection } from '../../src';
 import { waitRandom } from '../_resources/utils/wait-random';
@@ -760,6 +761,21 @@ describe('Collection', function () {
       const collection = new MyCollection([1, 2, 3], { foo: 'bar' });
       expect(() => collection.clone()).to.throw(/subclass/);
     });
+
+    it('should replicate Lodash behavior', () => {
+      const coll = new Collection<any>();
+
+      for (let i = 0; i < 10; i++) {
+        coll.push({
+          a: i,
+          b: i,
+          d: new Collection([{ y: i, z: i }])
+        });
+      }
+
+      expect(Lodash.clone(coll)).to.deep.equal(coll.clone());
+      expect(Lodash.clone(coll)).to.not.equal(coll.clone());
+    });
   });
 
   describe('#cloneDeep()', () => {
@@ -777,6 +793,21 @@ describe('Collection', function () {
       expect(cloned.getAt(1).foo).to.not.equal(b);
       expect(cloned.getAt(2).foo).to.deep.equal(c);
       expect(cloned.getAt(2).foo).to.not.equal(c);
+    });
+
+    it('should replicate Lodash behavior', () => {
+      const coll = new Collection<any>();
+
+      for (let i = 0; i < 10; i++) {
+        coll.push({
+          a: i,
+          b: i,
+          d: new Collection([{ y: i, z: i }])
+        });
+      }
+
+      expect(Lodash.cloneDeep(coll)).to.deep.equal(coll.cloneDeep());
+      expect(Lodash.cloneDeep(coll)).to.not.equal(coll.cloneDeep());
     });
   });
 
